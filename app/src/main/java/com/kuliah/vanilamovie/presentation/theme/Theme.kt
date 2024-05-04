@@ -1,4 +1,4 @@
-package com.kuliah.vanilamovie.ui.theme
+package com.kuliah.vanilamovie.presentation.theme
 
 import android.app.Activity
 import android.os.Build
