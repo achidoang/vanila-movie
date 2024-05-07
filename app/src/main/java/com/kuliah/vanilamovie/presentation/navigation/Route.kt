@@ -13,5 +13,6 @@ sealed class Route( val destination: String ) {
 	data object PosterImage: Route("poster_image")
 	data object ShowDetail: Route("show_detail")
 	data object MoviesPlayer: Route("movies_player")
+	data object Profile: Route("profile")
 }
 

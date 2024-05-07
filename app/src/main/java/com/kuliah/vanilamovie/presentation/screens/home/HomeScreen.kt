@@ -14,9 +14,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.kuliah.vanilamovie.R
 import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
+import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.screens.home.components.AlertDialog
 import com.kuliah.vanilamovie.presentation.screens.home.components.HeaderSection
 import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSection
@@ -27,17 +31,10 @@ import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenViewModel
 fun HomeScreen(
 	modifier: Modifier,
 	showMovieDetail: (Int) -> Unit,
+	navController: NavHostController,
 	darkTheme: Boolean
 ) {
 	val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
-
-	var dialogState by remember { mutableStateOf(false) }
-
-	AlertDialog(
-		dialogState = dialogState,
-		onOkClicked = { dialogState = false },
-		onDismiss = { dialogState = false }
-	)
 
 	val nowPlayingMovies = homeScreenViewModel.nowPlayingMovies.collectAsLazyPagingItems()
 	val popularMovies = homeScreenViewModel.popularMovies.collectAsLazyPagingItems()
@@ -67,7 +64,7 @@ fun HomeScreen(
 			HeaderSection(onClick = {
 				homeScreenViewModel.onEvent(HomeScreenEvent.ThemeToggled(it))
 			}, themeMode = darkTheme, infoIconClick = {
-				dialogState = true
+				navController.navigate(Route.Profile.destination) // Navigasi ke ProfileScreen
 			})
 
 			MoviesSection(

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +39,7 @@ fun HeaderSection(
 			infoIconClick()
 		}) {
 			Icon(
-				imageVector =  Icons.Default.Info,
+				imageVector =  Icons.Default.AccountCircle,
 				contentDescription = "Theme Icon",
 				Modifier.size(28.dp)
 			)

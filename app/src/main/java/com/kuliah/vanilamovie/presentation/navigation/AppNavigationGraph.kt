@@ -20,6 +20,7 @@ import com.kuliah.vanilamovie.presentation.screens.genres.GenresScreen
 import com.kuliah.vanilamovie.presentation.screens.home.HomeScreen
 import com.kuliah.vanilamovie.presentation.screens.player.PlayerScreen
 import com.kuliah.vanilamovie.presentation.screens.poster.PosterScreen
+import com.kuliah.vanilamovie.presentation.screens.profile.ProfileScreen
 import com.kuliah.vanilamovie.presentation.screens.search.MoviesSearchResultScreen
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.search.ShowsSearchResultScreen
@@ -54,10 +55,19 @@ fun AppNavigationGraph(
 		startDestination = Route.Home.destination
 	) {
 
-		composable(route= Route.Home.destination ) {
-			HomeScreen( modifier = modifier, showMovieDetail = {
-				navHostController.navigate("${Route.MovieDetail.destination}/$it")
-			},darkTheme = darkTheme )
+		composable(Route.Home.destination) {
+			HomeScreen(
+				modifier = Modifier,
+				showMovieDetail =  {
+					navHostController.navigate("${Route.MovieDetail.destination}/$it")
+				},
+				navController = navHostController, // Teruskan navController ke HomeScreen
+				darkTheme = darkTheme // Ubah sesuai kebutuhan Anda
+			)
+		}
+
+		composable(Route.Profile.destination) {
+			ProfileScreen()
 		}
 
 		composable(route= Route.Search.destination ) {
