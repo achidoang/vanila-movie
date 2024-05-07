@@ -1,8 +1,14 @@
 package com.kuliah.vanilamovie.di
 
+import android.app.Application
+import androidx.annotation.OptIn
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import com.kuliah.vanilamovie.data.remote.services.ItunesApi
 import com.kuliah.vanilamovie.data.repository.ItunesRepositoryImpl
 import com.kuliah.vanilamovie.domain.repository.ItunesRepository
+import com.kuliah.vanilamovie.presentation.viewModel.player.PlayerScreenViewModel
 import com.kuliah.vanilamovie.util.Constants.ITUNES_BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -39,6 +45,6 @@ object ItunesAppModule {
 
 	@Singleton
 	@Provides
-	fun providesItunesRepository( api: ItunesApi) : ItunesRepository = ItunesRepositoryImpl( api )
+	fun providesItunesRepository( api: ItunesApi ) : ItunesRepository = ItunesRepositoryImpl( api )
 
 }

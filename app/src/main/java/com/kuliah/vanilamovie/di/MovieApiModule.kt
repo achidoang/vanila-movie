@@ -13,6 +13,7 @@ import com.kuliah.vanilamovie.data.repository.MovieRepositoryImpl
 import com.kuliah.vanilamovie.data.repository.ShowsRepositoryImpl
 import com.kuliah.vanilamovie.domain.repository.MovieRepository
 import com.kuliah.vanilamovie.domain.repository.ShowsRepository
+import com.kuliah.vanilamovie.presentation.viewModel.player.PlayerScreenViewModel
 import com.kuliah.vanilamovie.util.Constants.MOVIE_BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -59,13 +60,13 @@ object MovieApiModule {
 
 	@Singleton
 	@Provides
-	fun provideDatastoreInstance(  @ApplicationContext context : Context) = PreferenceDataStoreFactory.create {
+	fun provideDatastoreInstance(  @ApplicationContext context : Context  ) = PreferenceDataStoreFactory.create {
 		context.preferencesDataStoreFile("settings")
 	}
 
-//	@Singleton
-//	@Provides
-//	fun provideVideoPlayer( app: Application)  = ExoPlayer.Builder( app )
-//		.setMediaSourceFactory(DefaultMediaSourceFactory(PlayerScreenViewModel.cacheDataSourceFactory)).build()
+	@Singleton
+	@Provides
+	fun provideVideoPlayer( app: Application)  = ExoPlayer.Builder( app )
+		.setMediaSourceFactory(DefaultMediaSourceFactory(PlayerScreenViewModel.cacheDataSourceFactory)).build()
 
 }

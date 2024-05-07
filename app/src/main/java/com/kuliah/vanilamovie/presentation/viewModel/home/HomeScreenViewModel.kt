@@ -1,4 +1,4 @@
-package com.kuliah.vanilamovie.presentation.viewModel
+package com.kuliah.vanilamovie.presentation.viewModel.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

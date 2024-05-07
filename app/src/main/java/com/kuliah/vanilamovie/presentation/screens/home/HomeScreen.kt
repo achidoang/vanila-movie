@@ -20,8 +20,8 @@ import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
 import com.kuliah.vanilamovie.presentation.screens.home.components.AlertDialog
 import com.kuliah.vanilamovie.presentation.screens.home.components.HeaderSection
 import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSection
-import com.kuliah.vanilamovie.presentation.viewModel.HomeScreenEvent
-import com.kuliah.vanilamovie.presentation.viewModel.HomeScreenViewModel
+import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenEvent
+import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenViewModel
 
 @Composable
 fun HomeScreen(
