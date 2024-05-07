@@ -23,7 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kuliah.vanilamovie.presentation.theme.VanilaMovieTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +37,9 @@ fun SearchWidget(
 	placeHolder: String
 ) {
 	Box(
-		modifier = Modifier.wrapContentHeight().fillMaxWidth()
+		modifier = Modifier
+			.wrapContentHeight()
+			.fillMaxWidth()
 	) {
 		TextField(
 			modifier = Modifier
@@ -93,5 +97,18 @@ fun SearchWidget(
 			)
 		)
 	}
+}
 
+@Preview(showBackground = true)
+@Composable
+fun SearchWidgetPreview(){
+	VanilaMovieTheme {
+		SearchWidget(
+			query = "",
+			onSearchClicked = {},
+			onValueChanged = {},
+			onCloseClicked = {},
+			placeHolder = "Search"
+		)
+	}
 }

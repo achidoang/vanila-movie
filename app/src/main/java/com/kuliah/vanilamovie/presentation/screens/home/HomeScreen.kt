@@ -21,7 +21,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.kuliah.vanilamovie.R
 import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
 import com.kuliah.vanilamovie.presentation.navigation.Route
-import com.kuliah.vanilamovie.presentation.screens.home.components.AlertDialog
 import com.kuliah.vanilamovie.presentation.screens.home.components.HeaderSection
 import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSection
 import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenEvent
