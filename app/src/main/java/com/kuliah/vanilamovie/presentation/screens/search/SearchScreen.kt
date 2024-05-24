@@ -99,23 +99,23 @@ fun SearchScreen(
 							// Handle page change if needed
 						}
 					)
-					LazyVerticalGrid(
-						columns = GridCells.Fixed(2),
-						contentPadding = PaddingValues(start = 15.dp)
-					) {
-						items(
-							count = trendingMovies.itemCount,
-							contentType = trendingMovies.itemContentType { "trendingMovies" }
-						) {
-							val movie = trendingMovies[it]
-							movie?.let {
-								SearchScreenMovieItem(
-									showMovieDetail = showMovieDetail,
-									movie = it
-								)
-							}
-						}
-					}
+//					LazyVerticalGrid(
+//						columns = GridCells.Fixed(2),
+//						contentPadding = PaddingValues(start = 15.dp)
+//					) {
+//						items(
+//							count = trendingMovies.itemCount,
+//							contentType = trendingMovies.itemContentType { "trendingMovies" }
+//						) {
+//							val movie = trendingMovies[it]
+//							movie?.let {
+//								SearchScreenMovieItem(
+//									showMovieDetail = showMovieDetail,
+//									movie = it
+//								)
+//							}
+//						}
+//					}
 				}
 			}
 		}

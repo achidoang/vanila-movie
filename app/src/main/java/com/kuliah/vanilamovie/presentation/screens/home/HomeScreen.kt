@@ -14,12 +14,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.kuliah.vanilamovie.R
 import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
+import com.kuliah.vanilamovie.presentation.common.SearchWidget
 import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.screens.home.components.HeaderSection
 import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSection
@@ -39,10 +41,12 @@ fun HomeScreen(
 	val popularMovies = homeScreenViewModel.popularMovies.collectAsLazyPagingItems()
 	val topRatedMovies = homeScreenViewModel.topRatedMovies.collectAsLazyPagingItems()
 
-	if ( (nowPlayingMovies.loadState.refresh is LoadState.Error) &&
+	var query by remember { mutableStateOf("") }
+
+	if ((nowPlayingMovies.loadState.refresh is LoadState.Error) &&
 		(topRatedMovies.loadState.refresh is LoadState.Error) &&
-		(popularMovies.loadState.refresh is LoadState.Error )
-	){
+		(popularMovies.loadState.refresh is LoadState.Error)
+	) {
 		NoInternetComponent(
 			modifier = modifier.fillMaxSize(),
 			error = "Whoops! Something has gone wrong\n Unable to connect to the server.",
@@ -59,12 +63,15 @@ fun HomeScreen(
 				.fillMaxSize()
 				.verticalScroll(state = rememberScrollState(), enabled = true)
 		) {
-
-			HeaderSection(onClick = {
-				homeScreenViewModel.onEvent(HomeScreenEvent.ThemeToggled(it))
-			}, themeMode = darkTheme, infoIconClick = {
-				navController.navigate(Route.Profile.destination) // Navigasi ke ProfileScreen
-			})
+			HeaderSection(
+				onClick = {
+					homeScreenViewModel.onEvent(HomeScreenEvent.ThemeToggled(it))
+				},
+				themeMode = darkTheme,
+				infoIconClick = {
+					navController.navigate(Route.Profile.destination) // Navigasi ke ProfileScreen
+				}
+			)
 
 			MoviesSection(
 				movies = nowPlayingMovies,

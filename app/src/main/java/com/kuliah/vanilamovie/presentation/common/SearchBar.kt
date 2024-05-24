@@ -45,7 +45,7 @@ fun SearchWidget(
 			modifier = Modifier
 				.padding(start = 15.dp, end = 15.dp, top = 15.dp, bottom = 10.dp)
 				.fillMaxWidth()
-				.height(66.dp),
+				.height(50.dp),
 			value = query,
 			onValueChange = {
 				onValueChanged(it)

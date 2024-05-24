@@ -24,7 +24,7 @@ fun HeaderSection(
 	Row(
 		modifier
 			.fillMaxSize()
-			.padding(start = 10.dp, end = 10.dp, top = 10.dp ) ,
+			.padding(start = 10.dp, end = 10.dp, top = 10.dp),
 		horizontalArrangement = Arrangement.SpaceBetween
 	) {
 		ThemeSwitcher(
@@ -33,13 +33,14 @@ fun HeaderSection(
 			onClick = {
 				onClick(it)
 			},
-			themeMode = themeMode
+			themeMode = themeMode,
+			modifier = Modifier.padding(top = 8.dp) // Mengatur padding top
 		)
 		IconButton(onClick = {
 			infoIconClick()
 		}) {
 			Icon(
-				imageVector =  Icons.Default.AccountCircle,
+				imageVector = Icons.Default.AccountCircle,
 				contentDescription = "Theme Icon",
 				Modifier.size(28.dp)
 			)

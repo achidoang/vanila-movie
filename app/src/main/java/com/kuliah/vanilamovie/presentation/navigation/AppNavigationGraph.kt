@@ -71,6 +71,7 @@ fun AppNavigationGraph(
 			ProfileScreen()
 		}
 
+
 		composable(route = Route.Search.destination) {
 			SearchScreen(modifier = modifier, searchMovies = {
 				navHostController.navigate("${Route.SearchMovies.destination}/$it")

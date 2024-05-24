@@ -41,9 +41,9 @@ fun ThemeSwitcher(
 	parentShape: RoundedCornerShape = CircleShape,
 	toggleShape: RoundedCornerShape = CircleShape,
 	animationSpec: AnimationSpec<Dp> = tween(durationMillis = 300),
-	onClick: (Boolean) -> Unit
+	onClick: (Boolean) -> Unit,
+	modifier: Modifier = Modifier
 ) {
-
 	var darkTheme by remember {
 		mutableStateOf(themeMode)
 	}
@@ -53,7 +53,7 @@ fun ThemeSwitcher(
 		animationSpec = animationSpec, label = ""
 	)
 
-	Box(modifier = Modifier
+	Box(modifier = modifier
 		.width(size * 2)
 		.height(size)
 		.clip(shape = parentShape)
@@ -87,7 +87,7 @@ fun ThemeSwitcher(
 			) {
 				Icon(
 					modifier = Modifier.size(iconSize),
-					painter =  painterResource(id = R.drawable.light_mode),
+					painter = painterResource(id = R.drawable.light_mode),
 					contentDescription = "Theme Icon",
 					tint = if (themeMode) MaterialTheme.colorScheme.primary
 					else MaterialTheme.colorScheme.secondaryContainer
@@ -99,7 +99,7 @@ fun ThemeSwitcher(
 			) {
 				Icon(
 					modifier = Modifier.size(iconSize),
-					painter =  painterResource(id = R.drawable.night_mode),
+					painter = painterResource(id = R.drawable.night_mode),
 					contentDescription = "Theme Icon",
 					tint = if (themeMode) MaterialTheme.colorScheme.secondaryContainer
 					else MaterialTheme.colorScheme.primary

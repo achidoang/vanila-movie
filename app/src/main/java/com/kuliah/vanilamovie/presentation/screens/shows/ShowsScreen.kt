@@ -75,27 +75,27 @@ fun ShowsScreen(
 				}
 			)
 
-			ShowsSection(
-				shows = onAirTvShows,
-				sectionTitle = "On Air",
-				onShowClick = {
-					showDetails.invoke(it)
-				}
-			)
-			ShowsSection(
-				shows = topRatedTvShows,
-				sectionTitle = "Top Rated",
-				onShowClick = {
-					showDetails.invoke(it)
-				}
-			)
-			ShowsSection(
-				shows = popularTvShows,
-				sectionTitle = "Popular",
-				onShowClick = {
-					showDetails.invoke(it)
-				}
-			)
+//			ShowsSection(
+//				shows = onAirTvShows,
+//				sectionTitle = "On Air",
+//				onShowClick = {
+//					showDetails.invoke(it)
+//				}
+//			)
+//			ShowsSection(
+//				shows = topRatedTvShows,
+//				sectionTitle = "Top Rated",
+//				onShowClick = {
+//					showDetails.invoke(it)
+//				}
+//			)
+//			ShowsSection(
+//				shows = popularTvShows,
+//				sectionTitle = "Popular",
+//				onShowClick = {
+//					showDetails.invoke(it)
+//				}
+//			)
 		}
 	}
 }
