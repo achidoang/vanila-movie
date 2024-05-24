@@ -1,16 +1,22 @@
 package com.kuliah.vanilamovie.presentation.screens.shows
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
 import com.kuliah.vanilamovie.presentation.common.SearchWidget
+import com.kuliah.vanilamovie.presentation.screens.search.PageIndicator
 import com.kuliah.vanilamovie.presentation.screens.shows.components.ShowsSection
 import com.kuliah.vanilamovie.presentation.viewModel.shows.ShowsScreenEvent
 import com.kuliah.vanilamovie.presentation.viewModel.shows.ShowsViewModel
@@ -21,17 +27,16 @@ fun ShowsScreen(
 	searchShows: (String) -> Unit,
 	showDetails: (Int) -> Unit
 ) {
-
 	val showsViewModel: ShowsViewModel = hiltViewModel()
 	val topRatedTvShows = showsViewModel.topRatedTvShows.collectAsLazyPagingItems()
 	val popularTvShows = showsViewModel.popularTvShows.collectAsLazyPagingItems()
 	val onAirTvShows = showsViewModel.onAirTvShows.collectAsLazyPagingItems()
+	val currentPage = "Shows" // Set the current page to "Shows" by default or based on your logic
 
-	if ( (topRatedTvShows.loadState.refresh is LoadState.Error) &&
+	if ((topRatedTvShows.loadState.refresh is LoadState.Error) &&
 		(popularTvShows.loadState.refresh is LoadState.Error) &&
 		(onAirTvShows.loadState.refresh is LoadState.Error)
 	) {
-
 		NoInternetComponent(
 			modifier = modifier.fillMaxSize(),
 			error = "You're Offline!",
@@ -41,9 +46,7 @@ fun ShowsScreen(
 				onAirTvShows.refresh()
 			}
 		)
-
 	} else {
-
 		Column(
 			modifier = modifier
 				.fillMaxSize()
@@ -56,12 +59,19 @@ fun ShowsScreen(
 					showsViewModel.searchQuery = ""
 				},
 				onSearchClicked = {
-					if ( showsViewModel.searchQuery.isNotEmpty() ) {
-						searchShows( showsViewModel.searchQuery )
+					if (showsViewModel.searchQuery.isNotEmpty()) {
+						searchShows(showsViewModel.searchQuery)
 					}
 				},
 				onValueChanged = {
-					showsViewModel.onEvent( ShowsScreenEvent.SearchQueryChange(it) )
+					showsViewModel.onEvent(ShowsScreenEvent.SearchQueryChange(it))
+				}
+			)
+
+			PageIndicator(
+				currentPage = currentPage,
+				onIndicatorClick = {
+					// Handle page change if needed
 				}
 			)
 
@@ -72,7 +82,6 @@ fun ShowsScreen(
 					showDetails.invoke(it)
 				}
 			)
-
 			ShowsSection(
 				shows = topRatedTvShows,
 				sectionTitle = "Top Rated",
@@ -80,7 +89,6 @@ fun ShowsScreen(
 					showDetails.invoke(it)
 				}
 			)
-
 			ShowsSection(
 				shows = popularTvShows,
 				sectionTitle = "Popular",
@@ -89,7 +97,5 @@ fun ShowsScreen(
 				}
 			)
 		}
-
 	}
-
 }

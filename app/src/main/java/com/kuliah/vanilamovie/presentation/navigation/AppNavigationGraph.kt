@@ -22,6 +22,7 @@ import com.kuliah.vanilamovie.presentation.screens.player.PlayerScreen
 import com.kuliah.vanilamovie.presentation.screens.poster.PosterScreen
 import com.kuliah.vanilamovie.presentation.screens.profile.ProfileScreen
 import com.kuliah.vanilamovie.presentation.screens.search.MoviesSearchResultScreen
+import com.kuliah.vanilamovie.presentation.screens.search.SearchPager
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.search.ShowsSearchResultScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
@@ -58,7 +59,7 @@ fun AppNavigationGraph(
 		composable(Route.Home.destination) {
 			HomeScreen(
 				modifier = Modifier,
-				showMovieDetail =  {
+				showMovieDetail = {
 					navHostController.navigate("${Route.MovieDetail.destination}/$it")
 				},
 				navController = navHostController, // Teruskan navController ke HomeScreen
@@ -70,7 +71,7 @@ fun AppNavigationGraph(
 			ProfileScreen()
 		}
 
-		composable(route= Route.Search.destination ) {
+		composable(route = Route.Search.destination) {
 			SearchScreen(modifier = modifier, searchMovies = {
 				navHostController.navigate("${Route.SearchMovies.destination}/$it")
 			}, showMovieDetail = {
@@ -81,42 +82,63 @@ fun AppNavigationGraph(
 		composable(
 			route = "${Route.SearchMovies.destination}/{query}",
 			arguments = listOf(
-				navArgument("query"){ type = NavType.StringType }
+				navArgument("query") { type = NavType.StringType }
 			)
 		) {
 			val query = it.arguments?.getString("query")!!
-			MoviesSearchResultScreen( query, moviesSearchAssistedFactory, modifier, showMovieDetail = {movieId ->
-				navHostController.navigate("${Route.MovieDetail.destination}/$movieId")
-			}, showMoviePoster = {posterPath ->
-				sharedViewModel.putPosterPath(posterPath)
-				navHostController.navigate(Route.PosterImage.destination)
-			} )
+			MoviesSearchResultScreen(
+				query,
+				moviesSearchAssistedFactory,
+				modifier,
+				showMovieDetail = { movieId ->
+					navHostController.navigate("${Route.MovieDetail.destination}/$movieId")
+				},
+				showMoviePoster = { posterPath ->
+					sharedViewModel.putPosterPath(posterPath)
+					navHostController.navigate(Route.PosterImage.destination)
+				})
 		}
 
-		composable(route= Route.Shows.destination ) {
+		composable(route = Route.Shows.destination) {
 			ShowsScreen(modifier = modifier, searchShows = {
 				navHostController.navigate("${Route.SearchShows.destination}/$it")
-			}, showDetails = {showId ->
+			}, showDetails = { showId ->
 				navHostController.navigate("${Route.ShowDetail.destination}/$showId")
 			})
+		}
+
+		composable(route = Route.Pager.destination) {
+			SearchPager(
+				searchMovies = { navHostController.navigate("${Route.SearchMovies.destination}/$it") },
+				showMovieDetail = { navHostController.navigate("${Route.MovieDetail.destination}/$it") },
+				searchShows = {navHostController.navigate("${Route.SearchShows.destination}/$it")},
+				showDetails = { showId ->
+					navHostController.navigate("${Route.ShowDetail.destination}/$showId")
+				}
+			)
 		}
 
 		composable(
 			route = "${Route.SearchShows.destination}/{q}",
 			arguments = listOf(
-				navArgument(name= "q"){  type = NavType.StringType }
+				navArgument(name = "q") { type = NavType.StringType }
 			)
-		){
+		) {
 			val query = it.arguments?.getString("q")!!
-			ShowsSearchResultScreen(query = query, assistedFactory = showsSearchAssistedFactory, modifier = modifier, showDetails = {
-				navHostController.navigate("${Route.ShowDetail.destination}/$it")
-			}, showPoster = {
-				sharedViewModel.putPosterPath(it)
-				navHostController.navigate(Route.PosterImage.destination)
-			})
+			ShowsSearchResultScreen(
+				query = query,
+				assistedFactory = showsSearchAssistedFactory,
+				modifier = modifier,
+				showDetails = {
+					navHostController.navigate("${Route.ShowDetail.destination}/$it")
+				},
+				showPoster = {
+					sharedViewModel.putPosterPath(it)
+					navHostController.navigate(Route.PosterImage.destination)
+				})
 		}
 
-		composable(route= Route.Genre.destination ) {
+		composable(route = Route.Genre.destination) {
 			GenresScreen(modifier = modifier, fetchMoviesByGenre = {
 				navHostController.navigate("${Route.MoviesGenreResult.destination}/$it")
 			}, fetchShowsByGenre = {
@@ -125,20 +147,25 @@ fun AppNavigationGraph(
 		}
 
 		composable(
-			route = Route.MoviesGenreResult.destination+ "/{id}",
-			arguments =  listOf(
+			route = Route.MoviesGenreResult.destination + "/{id}",
+			arguments = listOf(
 				navArgument(name = "id") {
 					type = NavType.LongType
 				}
 			)
 		) {
 			val id = it.arguments?.getLong("id")!!
-			GenresMovieResultScreen(modifier = modifier, genreId = id, assistedFactory = moviesGenresAssistedFactory, showMovieDetail = { movieId ->
-				navHostController.navigate("${Route.MovieDetail.destination}/$movieId")
-			}, showMoviePoster = {posterPath ->
-				sharedViewModel.putPosterPath(posterPath)
-				navHostController.navigate(Route.PosterImage.destination)
-			} )
+			GenresMovieResultScreen(
+				modifier = modifier,
+				genreId = id,
+				assistedFactory = moviesGenresAssistedFactory,
+				showMovieDetail = { movieId ->
+					navHostController.navigate("${Route.MovieDetail.destination}/$movieId")
+				},
+				showMoviePoster = { posterPath ->
+					sharedViewModel.putPosterPath(posterPath)
+					navHostController.navigate(Route.PosterImage.destination)
+				})
 		}
 
 		composable(route = Route.PosterImage.destination) {
@@ -148,16 +175,21 @@ fun AppNavigationGraph(
 		composable(
 			route = "${Route.MovieDetail.destination}/{id}",
 			arguments = listOf(
-				navArgument(name = "id"){ type = NavType.IntType }
+				navArgument(name = "id") { type = NavType.IntType }
 			)
 		) {
 			val movieId = it.arguments?.getInt("id")!!
-			MovieDetailScreen(movieId = movieId, modifier = modifier, assistedFactory = movieDetailAssistedFactory, showMoviePoster = { posterPath ->
-				sharedViewModel.putPosterPath(posterPath)
-				navHostController.navigate(Route.PosterImage.destination)
-			}, watchVideoPreview = { movieName ->
-				navHostController.navigate( "${Route.MoviesPlayer.destination}/$movieName" )
-			} )
+			MovieDetailScreen(
+				movieId = movieId,
+				modifier = modifier,
+				assistedFactory = movieDetailAssistedFactory,
+				showMoviePoster = { posterPath ->
+					sharedViewModel.putPosterPath(posterPath)
+					navHostController.navigate(Route.PosterImage.destination)
+				},
+				watchVideoPreview = { movieName ->
+					navHostController.navigate("${Route.MoviesPlayer.destination}/$movieName")
+				})
 		}
 
 		composable(
@@ -167,20 +199,24 @@ fun AppNavigationGraph(
 			)
 		) {
 			val movieName = it.arguments?.getString("name")!!
-			PlayerScreen(name = movieName, assistedFactory = moviesPlayerAssistedFactory )
+			PlayerScreen(name = movieName, assistedFactory = moviesPlayerAssistedFactory)
 		}
 
 		composable(
 			route = "${Route.ShowDetail.destination}/{id}",
 			arguments = listOf(
-				navArgument(name="id") { type = NavType.IntType }
+				navArgument(name = "id") { type = NavType.IntType }
 			)
 		) {
 			val showId = it.arguments?.getInt("id")!!
-			ShowDetailScreen(showId = showId, modifier = modifier, assistedFactory = showDetailAssistedFactory, showPoster = { posterPath ->
-				sharedViewModel.putPosterPath(posterPath)
-				navHostController.navigate(Route.PosterImage.destination)
-			} )
+			ShowDetailScreen(
+				showId = showId,
+				modifier = modifier,
+				assistedFactory = showDetailAssistedFactory,
+				showPoster = { posterPath ->
+					sharedViewModel.putPosterPath(posterPath)
+					navHostController.navigate(Route.PosterImage.destination)
+				})
 		}
 
 		composable(
@@ -199,7 +235,7 @@ fun AppNavigationGraph(
 					navHostController.navigate(Route.PosterImage.destination)
 				},
 				showDetail = { showId ->
-					navHostController.navigate( "${Route.ShowDetail.destination}/$showId" )
+					navHostController.navigate("${Route.ShowDetail.destination}/$showId")
 				}
 			)
 		}

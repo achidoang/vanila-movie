@@ -2,6 +2,7 @@ package com.kuliah.vanilamovie.presentation.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ManageSearch
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tv
@@ -21,14 +22,9 @@ data class BottomBarItem(
 				route = Route.Home.destination
 			),
 			BottomBarItem(
-				label = "Find",
+				label = "Search",
 				icon = Icons.Filled.Search,
-				route = Route.Search.destination
-			),
-			BottomBarItem(
-				label = "Shows",
-				icon = Icons.Filled.Tv,
-				route = Route.Shows.destination
+				route = Route.Pager.destination
 			),
 			BottomBarItem(
 				label = "Genres",
