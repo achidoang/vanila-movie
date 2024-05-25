@@ -27,6 +27,7 @@ import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.screens.home.components.Banner
 import com.kuliah.vanilamovie.presentation.screens.home.components.HeaderSection
 import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSection
+import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSectionNow
 import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenEvent
 import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenViewModel
 
@@ -78,7 +79,7 @@ fun HomeScreen(
 			Banner()
 			Spacer(modifier = Modifier.height(24.dp))
 
-			MoviesSection(
+			MoviesSectionNow(
 				movies = nowPlayingMovies,
 				sectionTitle = "Now Playing",
 				onMovieClick = {

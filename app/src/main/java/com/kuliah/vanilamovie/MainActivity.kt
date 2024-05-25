@@ -15,14 +15,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.kuliah.vanilamovie.presentation.common.AppBottomBar
 import com.kuliah.vanilamovie.presentation.navigation.AppNavigationGraph
 import com.kuliah.vanilamovie.presentation.theme.VanilaMovieTheme
@@ -56,12 +59,12 @@ import javax.inject.Inject
 	 @Inject
 	 lateinit var showDetailAssistedFactory: ShowDetailScreenViewModelAssistedFactory
 
-	 @Inject
-	 lateinit var showsResultAssistedFactory: GenresShowsResultViewModelAssistedFactory
-
 	 @UnstableApi
 	 @Inject
 	 lateinit var moviesPlayerAssistedFactory: PlayerScreenViewModel.PlayerViewModelAssistedFactory
+
+	 @Inject
+	 lateinit var showsResultAssistedFactory: GenresShowsResultViewModelAssistedFactory
 
 	 @RequiresApi(Build.VERSION_CODES.O)
 	 override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +73,20 @@ import javax.inject.Inject
 		 setContent {
 			 val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 			 val themeMode = homeScreenViewModel.themeMode.collectAsState().value
-			 VanilaMovieTheme( darkTheme = themeMode ) {
+
+			 VanilaMovieTheme(darkTheme = themeMode) {
+				 // Create a SystemUiController instance
+				 val systemUiController = rememberSystemUiController()
+				 val useDarkIcons = !themeMode
+
+				 // Set the status bar color
+				 SideEffect {
+					 systemUiController.setSystemBarsColor(
+						 color = if (themeMode) Color(0xFF1B1A1F) else Color.White,
+						 darkIcons = useDarkIcons
+					 )
+				 }
+
 				 Surface(
 					 modifier = Modifier
 						 .fillMaxSize()
@@ -99,7 +115,7 @@ import javax.inject.Inject
 		 ) {
 			 AppNavigationGraph(
 				 navHostController = navController,
-				 modifier = Modifier.padding( paddingValues = it),
+				 modifier = Modifier.padding(paddingValues = it),
 				 moviesSearchAssistedFactory = searchAssistedFactory,
 				 moviesGenresAssistedFactory = moviesGenreAssistedFactory,
 				 showsSearchAssistedFactory = showsSearchAssistedFactory,

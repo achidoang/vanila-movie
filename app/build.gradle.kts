@@ -128,4 +128,5 @@ dependencies {
 	implementation("com.google.accompanist:accompanist-pager:0.24.13-rc")
 	implementation("androidx.compose.foundation:foundation:1.6.7")
 	implementation("com.google.accompanist:accompanist-pager-indicators:0.24.13-rc")
+	implementation("com.google.accompanist:accompanist-systemuicontroller:0.24.13-rc")
 }

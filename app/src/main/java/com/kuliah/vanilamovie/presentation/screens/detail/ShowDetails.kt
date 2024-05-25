@@ -81,15 +81,15 @@ fun ShowDetails(
 				modifier = Modifier
 					.align(Alignment.TopStart)
 					.fillMaxWidth()
-					.height(240.dp)
+					.height(180.dp)
 					.background(MidnightBlack),
 				contentScale = ContentScale.Crop
 			)
 			Row (
 				modifier = Modifier
-					.padding(top = 173.dp, start = 8.dp, end = 8.dp)
+					.padding(top = 150.dp, start = 8.dp, end = 8.dp)
 					.fillMaxWidth()
-					.height(320.dp),
+					.height(220.dp),
 				verticalAlignment = Alignment.Top,
 				horizontalArrangement = Arrangement.Start
 			){
@@ -100,9 +100,9 @@ fun ShowDetails(
 						}
 					},
 					modifier = Modifier
-						.padding(end = 10.dp)
-						.weight(1f)
-						.height(320.dp)
+						.padding(start = 10.dp,end = 20.dp)
+						.width(110.dp)
+						.height(180.dp)
 						.clip(RoundedCornerShape(8.dp)),
 				) {
 					AsyncImage(
@@ -190,133 +190,142 @@ fun ShowDetails(
 				}
 			}
 		}
-
-		if ( show.tagline != "" ) {
-			Text(
-				text = show.tagline ?: "",
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(14.dp),
-				fontStyle = FontStyle.Italic,
-				fontWeight = FontWeight.Medium,
-				fontSize = 17.sp
-			)
+		DataDetailShow(show = show) {
+			
 		}
-
-		if ( !show.overview.isNullOrEmpty() ) {
-			Text(
-				text = "Overview",
-				Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-				fontSize = 18.sp,
-				fontWeight = FontWeight.Medium,
-				color = SeaGreen
-			)
-			Text(
-				text = show.overview,
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-				textAlign = TextAlign.Left
-			)
-		}
-
-		Divider()
-		Row(
-			verticalAlignment = Alignment.CenterVertically,
-			horizontalArrangement = Arrangement.Center,
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(10.dp)
-		) {
-			val seasonNoCheck = if ( show.numberOfSeasons > 1 ) "seasons" else "season"
-			val episodeNoCheck = if ( show.numberOfEpisodes > 1 ) "episodes" else "episode"
-			Text(text = "${ show.numberOfSeasons } $seasonNoCheck", modifier = Modifier.padding( end = 10.dp ), fontWeight = FontWeight.Bold)
-			Spacer(
-				modifier = Modifier
-					.height(24.dp)
-					.width(2.dp)
-					.background(color = Color.Gray)
-					.padding(10.dp)
-			)
-			Text(text = "${show.numberOfEpisodes} $episodeNoCheck", modifier = Modifier.padding( start = 10.dp, end = 10.dp), fontWeight = FontWeight.Bold)
-		}
-		Divider()
-
-		Row(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(start = 10.dp, end = 10.dp, bottom = 10.dp, top = 10.dp),
-			verticalAlignment = Alignment.Top
-		) {
-			Text(text = "Genres: ", fontWeight = FontWeight.Bold, color = SeaGreen)
-			Text(text = show.genres.joinToString { it.name })
-		}
-
-		Column(
-			modifier = Modifier.padding(horizontal = 10.dp)
-		) {
-			if ( show.productionCompanies.isNotEmpty() ) {
-				Text(
-					text = "Production Companies:",
-					fontWeight = FontWeight.Bold,
-					modifier = Modifier.padding(bottom = 4.dp),
-					color = SeaGreen
-				)
-				Text(text = show.productionCompanies.joinToString { it.name })
-				Spacer(modifier = Modifier.size(12.dp))
-			}
-			if ( show.productionCountries.isNotEmpty() ) {
-				Text(
-					text = "Production Countries:",
-					fontWeight = FontWeight.Bold,
-					modifier = Modifier.padding(bottom = 4.dp),
-					color = SeaGreen
-				)
-				Text(text = show.productionCountries.joinToString { it.name })
-			}
-		}
-
-		if ( show.networks.isNotEmpty() ) {
-			Text(
-				text = "Networks:",
-				fontWeight = FontWeight.Medium,
-				modifier = Modifier.padding(start = 10.dp, top = 10.dp),
-				color = SeaGreen
-			)
-			Spacer(modifier = Modifier.size(10.dp))
-			Row(
-				modifier = Modifier
-					.wrapContentWidth()
-					.horizontalScroll(rememberScrollState())
-					.padding(start = 10.dp)
-			) {
-				show.networks.forEach {
-					Box(
-						modifier = Modifier
-							.height(75.dp)
-							.width(100.dp)
-							.clip(RoundedCornerShape(8.dp))
-							.clickable {
-								it.logoPath?.let { posterPath ->
-									showPoster(posterPath)
-								}
-							}
-							.background(WhiteSmoke)
-							.padding(horizontal = 10.dp),
-						contentAlignment = Alignment.Center
-					) {
-						AsyncImage(
-							model = displayPosterImage(it.logoPath),
-							contentDescription = "Poster Image",
-							contentScale = ContentScale.Fit,
-						)
-					}
-					Spacer(modifier = Modifier.size(10.dp))
-				}
-			}
-		}
-		Spacer(modifier = Modifier.size(10.dp))
 	}
+}
+
+@Composable
+fun DataDetailShow(
+	show: ShowDetail,
+	showPoster: (String) -> Unit
+){
+	if ( show.tagline != "" ) {
+		Text(
+			text = show.tagline ?: "",
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(14.dp),
+			fontStyle = FontStyle.Italic,
+			fontWeight = FontWeight.Medium,
+			fontSize = 17.sp
+		)
+	}
+
+	if ( !show.overview.isNullOrEmpty() ) {
+		Text(
+			text = "Overview",
+			Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
+			fontSize = 18.sp,
+			fontWeight = FontWeight.Medium,
+			color = SeaGreen
+		)
+		Text(
+			text = show.overview,
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
+			textAlign = TextAlign.Left
+		)
+	}
+
+	Divider()
+	Row(
+		verticalAlignment = Alignment.CenterVertically,
+		horizontalArrangement = Arrangement.Center,
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(10.dp)
+	) {
+		val seasonNoCheck = if ( show.numberOfSeasons > 1 ) "seasons" else "season"
+		val episodeNoCheck = if ( show.numberOfEpisodes > 1 ) "episodes" else "episode"
+		Text(text = "${ show.numberOfSeasons } $seasonNoCheck", modifier = Modifier.padding( end = 10.dp ), fontWeight = FontWeight.Bold)
+		Spacer(
+			modifier = Modifier
+				.height(24.dp)
+				.width(2.dp)
+				.background(color = Color.Gray)
+				.padding(10.dp)
+		)
+		Text(text = "${show.numberOfEpisodes} $episodeNoCheck", modifier = Modifier.padding( start = 10.dp, end = 10.dp), fontWeight = FontWeight.Bold)
+	}
+	Divider()
+
+	Row(
+		modifier = Modifier
+			.fillMaxWidth()
+			.padding(start = 10.dp, end = 10.dp, bottom = 10.dp, top = 10.dp),
+		verticalAlignment = Alignment.Top
+	) {
+		Text(text = "Genres: ", fontWeight = FontWeight.Bold, color = SeaGreen)
+		Text(text = show.genres.joinToString { it.name })
+	}
+
+	Column(
+		modifier = Modifier.padding(horizontal = 10.dp)
+	) {
+		if ( show.productionCompanies.isNotEmpty() ) {
+			Text(
+				text = "Production Companies:",
+				fontWeight = FontWeight.Bold,
+				modifier = Modifier.padding(bottom = 4.dp),
+				color = SeaGreen
+			)
+			Text(text = show.productionCompanies.joinToString { it.name })
+			Spacer(modifier = Modifier.size(12.dp))
+		}
+		if ( show.productionCountries.isNotEmpty() ) {
+			Text(
+				text = "Production Countries:",
+				fontWeight = FontWeight.Bold,
+				modifier = Modifier.padding(bottom = 4.dp),
+				color = SeaGreen
+			)
+			Text(text = show.productionCountries.joinToString { it.name })
+		}
+	}
+
+	if ( show.networks.isNotEmpty() ) {
+		Text(
+			text = "Networks:",
+			fontWeight = FontWeight.Medium,
+			modifier = Modifier.padding(start = 10.dp, top = 10.dp),
+			color = SeaGreen
+		)
+		Spacer(modifier = Modifier.size(10.dp))
+		Row(
+			modifier = Modifier
+				.wrapContentWidth()
+				.horizontalScroll(rememberScrollState())
+				.padding(start = 10.dp)
+		) {
+			show.networks.forEach {
+				Box(
+					modifier = Modifier
+						.height(75.dp)
+						.width(100.dp)
+						.clip(RoundedCornerShape(8.dp))
+						.clickable {
+							it.logoPath?.let { posterPath ->
+								showPoster(posterPath)
+							}
+						}
+						.background(WhiteSmoke)
+						.padding(horizontal = 10.dp),
+					contentAlignment = Alignment.Center
+				) {
+					AsyncImage(
+						model = displayPosterImage(it.logoPath),
+						contentDescription = "Poster Image",
+						contentScale = ContentScale.Fit,
+					)
+				}
+				Spacer(modifier = Modifier.size(10.dp))
+			}
+		}
+	}
+	Spacer(modifier = Modifier.size(10.dp))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
