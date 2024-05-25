@@ -3,6 +3,7 @@ package com.kuliah.vanilamovie.presentation.screens.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -23,6 +24,7 @@ import com.kuliah.vanilamovie.R
 import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
 import com.kuliah.vanilamovie.presentation.common.SearchWidget
 import com.kuliah.vanilamovie.presentation.navigation.Route
+import com.kuliah.vanilamovie.presentation.screens.home.components.Banner
 import com.kuliah.vanilamovie.presentation.screens.home.components.HeaderSection
 import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSection
 import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenEvent
@@ -72,6 +74,9 @@ fun HomeScreen(
 					navController.navigate(Route.Profile.destination) // Navigasi ke ProfileScreen
 				}
 			)
+
+			Banner()
+			Spacer(modifier = Modifier.height(24.dp))
 
 			MoviesSection(
 				movies = nowPlayingMovies,
