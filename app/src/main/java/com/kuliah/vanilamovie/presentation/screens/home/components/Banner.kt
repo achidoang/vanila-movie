@@ -62,15 +62,14 @@ fun Banner() {
 	Box(
 		modifier = Modifier
 			.fillMaxWidth()
-			.height(190.dp)
-			.padding(horizontal = 24.dp)
+			.height(120.dp)
 	) {
 		HorizontalPager(
 			state = pagerState,
 			count = banners.size,
 			modifier = Modifier
 				.fillMaxWidth()
-				.height(190.dp)
+				.height(120.dp)
 		) { index ->
 			Image(
 				painter = painterResource(id = banners[index]),
@@ -80,11 +79,11 @@ fun Banner() {
 		}
 		Row(
 			modifier = Modifier
-				.align(Alignment.BottomStart)
-				.padding(16.dp)
+				.align(Alignment.BottomCenter)
+				.padding(8.dp)
 		) {
 			repeat(banners.size){ index ->
-				val height = 12.dp
+				val height = 8.dp
 				val width = if(index == bannerIndex.value) 28.dp else 12.dp
 				val color = if(index == bannerIndex.value) Yellow else Gray
 
