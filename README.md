@@ -1,4 +1,4 @@
-## Final Project Pemrograman Perangkat Mobile
+# Final Project Pemrograman Perangkat Mobile UMS
 
 <h2>Features</h2>
 <ul>
