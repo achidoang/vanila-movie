@@ -51,7 +51,9 @@ import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
 import com.kuliah.vanilamovie.domain.model.valueObjects.Company
 import com.kuliah.vanilamovie.domain.model.valueObjects.Country
 import com.kuliah.vanilamovie.domain.model.valueObjects.Genre
+import com.kuliah.vanilamovie.presentation.common.DataDetailMovie
 import com.kuliah.vanilamovie.presentation.screens.bioskop.BioskopScreen
+import com.kuliah.vanilamovie.presentation.screens.bioskop.DetailDataMovie
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
 import com.kuliah.vanilamovie.presentation.theme.DodgerBlue
@@ -141,10 +143,10 @@ fun MovieDetails(
 					count = 2,
 					modifier = Modifier
 						.fillMaxSize()
-						.height(800.dp)
+						.height(200.dp)
 				) { page ->
 					when (page) {
-						0 -> DataDetailMovie(movie = movie)
+						0 -> DetailDataMovie(movie = movie)
 						1 -> BioskopScreen()
 					}
 				}
@@ -294,178 +296,6 @@ fun DataDetailMovie1(
 	}
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun DataDetailMovie(
-	movie: MovieDetail,
-) {
-	if (movie.tagline != "") {
-		Text(
-			text = movie.tagline ?: "",
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(14.dp),
-			fontStyle = FontStyle.Italic,
-			fontWeight = FontWeight.Medium,
-			fontSize = 17.sp
-		)
-	}
-
-	if (!movie.overview.isNullOrEmpty()) {
-		Text(
-			text = "Overview",
-			Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-			fontSize = 18.sp,
-			fontWeight = FontWeight.Medium,
-			color = SeaGreen
-		)
-		Text(
-			text = movie.overview,
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
-		)
-	}
-
-	if (!movie.releaseDate.isNullOrEmpty()) {
-		Divider()
-		Row(
-			verticalAlignment = Alignment.CenterVertically,
-			horizontalArrangement = Arrangement.Center,
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(10.dp)
-		) {
-
-			if (movie.budget == 0L && movie.revenue == 0L) {
-				Row(
-					horizontalArrangement = Arrangement.Center,
-					verticalAlignment = Alignment.CenterVertically
-				) {
-					Text(
-						text = "${movie.status}:",
-						fontWeight = FontWeight.Bold,
-						modifier = Modifier.padding(end = 5.dp)
-					)
-					//                        Text(
-					//                            text = formatDate(movie.releaseDate),
-					//                            fontWeight = FontWeight.Bold,
-					//                            color = TomatoRed
-					//                        )
-					Text(
-						text = movie.releaseDate,
-						fontWeight = FontWeight.Bold,
-						color = TomatoRed
-					)
-				}
-
-			} else {
-				Box(
-					modifier = Modifier.padding(end = 10.dp)
-				) {
-					Text(
-						text = movie.status?.lowercase()!!,
-						fontSize = 12.sp,
-						modifier = Modifier.align(Alignment.TopEnd)
-					)
-					Text(
-						text = formatDate(movie.releaseDate),
-						modifier = Modifier.padding(top = 15.dp),
-						fontWeight = FontWeight.Bold,
-						color = TomatoRed,
-						maxLines = 1
-					)
-					//                    Text(
-					//                        text = "${movie.releaseDate}",
-					//                        modifier = Modifier.padding(top = 15.dp),
-					//                        fontWeight = FontWeight.Bold,
-					//                        color = PumpkinOrange
-					//                    )
-				}
-			}
-
-			if (movie.budget != 0L) {
-				Spacer(
-					modifier = Modifier
-						.height(24.dp)
-						.width(2.dp)
-						.background(color = Color.Gray)
-						.padding(10.dp)
-				)
-				Box(
-					modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-				) {
-					Text(
-						text = "input",
-						fontSize = 12.sp,
-						modifier = Modifier.align(Alignment.TopEnd)
-					)
-					Text(
-						text = "$${separateWithCommas(movie.budget)}",
-						modifier = Modifier.padding(top = 15.dp),
-						fontWeight = FontWeight.Bold,
-						color = TomatoRed,
-						maxLines = 1
-					)
-				}
-			}
-			if (movie.revenue != 0L) {
-				Spacer(
-					modifier = Modifier
-						.height(24.dp)
-						.width(2.dp)
-						.background(color = Color.Gray)
-						.padding(10.dp)
-				)
-				Box(
-					modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-				) {
-					Text(
-						text = "output",
-						fontSize = 12.sp,
-						modifier = Modifier.align(Alignment.TopEnd)
-					)
-					Text(
-						text = "$${separateWithCommas(movie.revenue)}",
-						modifier = Modifier.padding(top = 15.dp),
-						fontWeight = FontWeight.Bold,
-						color = TomatoRed,
-						maxLines = 1
-					)
-				}
-			}
-		}
-		Divider()
-		Spacer(modifier = Modifier.height(10.dp))
-	}
-
-	//	1
-
-	Column(
-		modifier = Modifier.padding(horizontal = 10.dp)
-	) {
-		if (movie.productionCompanies.isNotEmpty()) {
-			Text(
-				text = "Production Companies:",
-				fontWeight = FontWeight.Bold,
-				modifier = Modifier.padding(bottom = 4.dp),
-				color = SeaGreen
-			)
-			Text(text = movie.productionCompanies.joinToString { it.name })
-			Spacer(modifier = Modifier.size(12.dp))
-		}
-		if (movie.productionCountries.isNotEmpty()) {
-			Text(
-				text = "Production Countries:",
-				fontWeight = FontWeight.Bold,
-				modifier = Modifier.padding(bottom = 4.dp),
-				color = SeaGreen
-			)
-			Text(text = movie.productionCountries.joinToString { it.name })
-		}
-	}
-	Spacer(modifier = Modifier.size(10.dp))
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)

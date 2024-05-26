@@ -16,20 +16,24 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.compose.itemContentType
+import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
 import com.kuliah.vanilamovie.presentation.screens.search.components.SearchScreenMovieItem
+import com.kuliah.vanilamovie.presentation.theme.SeaGreen
 import com.kuliah.vanilamovie.presentation.theme.VanilaMovieTheme
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -71,12 +75,12 @@ fun BioskopScreen(
 
 		Text(
 			text = "Solo Paragon XXI",
-			style = MaterialTheme.typography.h5,
+			style = MaterialTheme.typography.titleSmall,
 			fontWeight = FontWeight.Bold,
 			modifier = Modifier.align(Alignment.Start)
 		)
 
-		Spacer(modifier = Modifier.height(32.dp))
+		Spacer(modifier = Modifier.height(20.dp))
 
 		val showTimes = listOf("10:00", "12:30", "15:00", "17:30", "20:00")
 
@@ -89,11 +93,47 @@ fun BioskopScreen(
 			items(showTimes) { time ->
 				Button(
 					onClick = { onTimeSelected(time) },
-					modifier = Modifier.height(10.dp)  // Atur tinggi tombol di sini
+					modifier = Modifier.padding(end = 20.dp, bottom = 10.dp)  // Atur tinggi tombol di sini
 				) {
-					Text(text = time)
+					Text(text = time, textAlign = TextAlign.Center)
 				}
 			}
+		}
+	}
+}
+
+@Composable
+fun DetailDataMovie(movie: MovieDetail) {
+	Column {
+		if (movie.tagline != "") {
+			Text(
+				text = movie.tagline ?: "",
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(bottom = 14.dp, start = 10.dp),
+				fontStyle = FontStyle.Italic,
+				fontWeight = FontWeight.Medium,
+				fontSize = 17.sp
+			)
+		}
+
+		if (!movie.overview.isNullOrEmpty()) {
+
+
+			Text(
+				text = "Overview",
+				Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
+				fontSize = 18.sp,
+				fontWeight = FontWeight.Medium,
+				color = SeaGreen
+			)
+			Text(
+				text = movie.overview,
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
+				color = MaterialTheme.colorScheme.onBackground
+			)
 		}
 	}
 }

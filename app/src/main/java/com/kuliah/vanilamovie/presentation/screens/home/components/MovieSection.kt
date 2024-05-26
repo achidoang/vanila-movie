@@ -177,7 +177,12 @@ fun MoviesSectionNow(
 			when (movies.loadState.refresh) {
 				is LoadState.Error -> {
 					item {
-						Row {
+						Row(
+							modifier = Modifier
+								//								.fillMaxWidth()
+								.padding(horizontal = 15.dp),
+							horizontalArrangement = Arrangement.spacedBy(15.dp)
+						) {
 							repeat(10) {
 								AnimatedImageShimmerEffect(height = 300.dp, width = 179.dp)
 							}
@@ -187,7 +192,12 @@ fun MoviesSectionNow(
 
 				LoadState.Loading -> {
 					item {
-						Row {
+						Row (
+							modifier = Modifier
+//								.fillMaxWidth()
+								.padding(horizontal = 15.dp),
+							horizontalArrangement = Arrangement.spacedBy(15.dp)
+						){
 							repeat(10) {
 								AnimatedImageShimmerEffect(height = 300.dp, width = 179.dp)
 							}
