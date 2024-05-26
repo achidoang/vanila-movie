@@ -54,7 +54,7 @@ fun ShowsSection(
 					item {
 						Row {
 							repeat(10) {
-								AnimatedImageShimmerEffect()
+//								AnimatedImageShimmerEffect()
 							}
 						}
 					}
@@ -63,7 +63,7 @@ fun ShowsSection(
 					item {
 						Row {
 							repeat(10) {
-								AnimatedImageShimmerEffect()
+//								AnimatedImageShimmerEffect()
 							}
 						}
 					}

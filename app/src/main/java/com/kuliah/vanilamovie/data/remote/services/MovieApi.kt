@@ -56,7 +56,7 @@ interface MovieApi {
 		@Query("query") query: String
 	) : ShowResponse
 
-	@GET("movie/{movie_id}?language=id-ID&api_key=${API_KEY}")
+	@GET("movie/{movie_id}?&api_key=${API_KEY}")
 	suspend fun fetchMovieDetail(
 		@Path("movie_id") movieId: Int
 	) : MovieDetailDTO

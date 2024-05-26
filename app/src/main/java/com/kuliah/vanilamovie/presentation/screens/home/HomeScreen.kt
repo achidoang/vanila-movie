@@ -82,9 +82,11 @@ fun HomeScreen(
 			MoviesSectionNow(
 				movies = nowPlayingMovies,
 				sectionTitle = "Now Playing",
-				onMovieClick = {
-					showMovieDetail(it)
-				}
+				onMovieClick = { movieId ->
+					// Navigasi ke detail film tertentu
+					navController.navigate("${Route.MovieDetail.destination}/$movieId")
+				},
+				navController = navController // Pastikan untuk meneruskan NavController
 			)
 
 			MoviesSection(

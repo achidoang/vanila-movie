@@ -81,15 +81,15 @@ fun SearchScreen(
 							.padding(5.dp)
 					) {
 						Row {
-							AnimatedLargeImageShimmerEffect()
+//							AnimatedLargeImageShimmerEffect()
 							Spacer(modifier = Modifier.width(7.dp))
-							AnimatedLargeImageShimmerEffect()
+//							AnimatedLargeImageShimmerEffect()
 						}
 						Spacer(modifier = Modifier.size(7.dp))
 						Row {
-							AnimatedLargeImageShimmerEffect()
+//							AnimatedLargeImageShimmerEffect()
 							Spacer(modifier = Modifier.width(7.dp))
-							AnimatedLargeImageShimmerEffect()
+//							AnimatedLargeImageShimmerEffect()
 						}
 					}
 				} else {

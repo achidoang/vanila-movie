@@ -141,17 +141,46 @@ fun MovieDetails(
 					if (movie.rating != 0.toDouble()) {
 						Spacer(modifier = Modifier.size(11.dp))
 						val rating = String.format("%.1f", movie.rating)
-						Text(text = "$rating rating")
+						Row(
+							modifier = Modifier
+								.fillMaxWidth(),
+							verticalAlignment = Alignment.Top
+						) {
+							Text(text = "Rating    :")
+							Text(text = "$rating rating")
+						}
+
 					} else {
 						Spacer(modifier = Modifier.height(4.dp))
-						Text(text = "-", modifier = Modifier.padding(start = 7.dp))
+						Row(
+							modifier = Modifier
+								.fillMaxWidth(),
+							verticalAlignment = Alignment.Top
+						) {
+							Text(text = "Rating    : ")
+							Text(text = "-")
+						}
 					}
 					if (!movie.duration.isNullOrEmpty() && movie.duration != "0") {
 						Spacer(modifier = Modifier.height(4.dp))
-						Text(text = convertMinutesToHoursAndMinutes(movie.duration.toInt()))
+						Row(
+							modifier = Modifier
+								.fillMaxWidth(),
+							verticalAlignment = Alignment.Top
+						) {
+							Text(text = "Duration : ")
+							Text(text = convertMinutesToHoursAndMinutes(movie.duration.toInt()))
+						}
 					} else {
 						Spacer(modifier = Modifier.height(4.dp))
-						Text(text = "-", modifier = Modifier.padding(start = 7.dp))
+						Row(
+							modifier = Modifier
+								.fillMaxWidth(),
+							verticalAlignment = Alignment.Top
+						) {
+							Text(text = "Duration : ")
+							Text(text = "-")
+						}
 					}
 					Spacer(modifier = Modifier.weight(1.2f))
 
@@ -183,34 +212,50 @@ fun MovieDetails(
 
 			}
 		}
+		Divider()
+//		HorizontalPager(
+//			state = pagerState,
+//			count = 2,
+//			modifier = Modifier.fillMaxSize().height(800.dp)
+//		) { page ->
+//			when (page) {
+//				0 -> DataDetailMovie(movie = movie)
+//				1 -> Text(
+//					text = "Tampilan bioskop yang ada",
+//					modifier = Modifier
+//						.fillMaxSize()
+//						.padding(16.dp)
+//				)
+//			}
+//		}
 
 		DataDetailMovie(movie = movie)
 
-//		Column(
-//			modifier = Modifier.fillMaxSize(),
-//			horizontalAlignment = Alignment.CenterHorizontally
-//
-//		) {
-//
-//
-//			HorizontalPager(
-//				state = pagerState,
-//				count = 2,
-//				modifier = Modifier.weight(1f)
-//
-//			) { page ->
-//				when (page) {
-//					0 -> {
-//						Text(text = "Data Movie")
-//					}
-//
-//					1 -> {
-//						Text(text = "Booking Movie")
-//
-//					}
-//				}
-//			}
-//		}
+		//		Column(
+		//			modifier = Modifier.fillMaxSize(),
+		//			horizontalAlignment = Alignment.CenterHorizontally
+		//
+		//		) {
+		//
+		//
+		//			HorizontalPager(
+		//				state = pagerState,
+		//				count = 2,
+		//				modifier = Modifier.weight(1f)
+		//
+		//			) { page ->
+		//				when (page) {
+		//					0 -> {
+		//						Text(text = "Data Movie")
+		//					}
+		//
+		//					1 -> {
+		//						Text(text = "Booking Movie")
+		//
+		//					}
+		//				}
+		//			}
+		//		}
 
 	}
 }

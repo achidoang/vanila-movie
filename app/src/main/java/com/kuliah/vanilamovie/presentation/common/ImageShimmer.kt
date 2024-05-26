@@ -18,10 +18,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AnimatedImageShimmerEffect() {
+fun AnimatedImageShimmerEffect(
+	height: Dp = 240.dp,
+	width: Dp= 155.dp,
+) {
 
 	val shimmerColors = listOf(
 		Color.LightGray.copy(alpha = 0.6f),
@@ -35,7 +39,7 @@ fun AnimatedImageShimmerEffect() {
 		targetValue = 400f,
 		animationSpec = infiniteRepeatable(
 			animation = tween(
-				durationMillis = 1000,
+				durationMillis = 2200,
 				easing = FastOutSlowInEasing
 			),
 			repeatMode = RepeatMode.Reverse
@@ -47,16 +51,20 @@ fun AnimatedImageShimmerEffect() {
 		end = Offset(translateAnimation.value, translateAnimation.value)
 	)
 
-	ImageShimmerItem(brush = brush)
+	ImageShimmerItem(brush = brush, height = height, width = width)
 }
 
 @Composable
-fun ImageShimmerItem(brush: Brush) {
+fun ImageShimmerItem(
+	brush: Brush,
+	height: Dp = 240.dp,
+	width: Dp= 155.dp,
+) {
 	Spacer(
 		modifier = Modifier
-			.height(200.dp)
-			.width(145.dp)
-			.clip(RoundedCornerShape(8.dp))
+			.height(height)
+			.width(width)
+			.clip(RoundedCornerShape(12.dp))
 			.background(brush)
 	)
 	Spacer(modifier = Modifier.width(7.dp))

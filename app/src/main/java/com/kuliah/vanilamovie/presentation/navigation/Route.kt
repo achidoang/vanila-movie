@@ -15,5 +15,6 @@ sealed class Route( val destination: String ) {
 	data object MoviesPlayer: Route("movies_player")
 	data object Profile: Route("profile")
 	data object Pager: Route("pager")
+	data object MovieNow: Route("movie_now")
 }
 

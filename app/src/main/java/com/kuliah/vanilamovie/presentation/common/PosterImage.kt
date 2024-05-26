@@ -91,7 +91,7 @@ fun PosterWithText(
 	horizontalPadding: Dp = 2.dp,
 	onClick: ((Int) -> Unit)? = null,
 	id: Int? = null,
-	text: String = "            Buy Ticket            "
+	text: String = "                Buy Ticket                "
 ) {
 	Box(
 		modifier = Modifier

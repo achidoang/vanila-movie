@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.kuliah.vanilamovie.presentation.screens.detail.MovieDetailScreen
+import com.kuliah.vanilamovie.presentation.screens.detail.MovieNowDetailScreen
 import com.kuliah.vanilamovie.presentation.screens.detail.ShowDetailScreen
 import com.kuliah.vanilamovie.presentation.screens.genres.GenreShowsResultScreen
 import com.kuliah.vanilamovie.presentation.screens.genres.GenresMovieResultScreen
@@ -69,6 +70,12 @@ fun AppNavigationGraph(
 
 		composable(Route.Profile.destination) {
 			ProfileScreen()
+		}
+
+		composable(Route.MovieNow.destination){
+			MovieNowDetailScreen(modifier = modifier, showMovieDetail = {
+				navHostController.navigate("${Route.MovieDetail.destination}/$it")
+			} )
 		}
 
 
