@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -43,6 +44,9 @@ import com.kuliah.vanilamovie.presentation.common.PosterImage
 import com.kuliah.vanilamovie.presentation.common.PosterWithText
 import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenViewModel
+import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModel
+import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelAssistedFactory
+import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelFactory
 
 @Composable
 fun MoviesSection(
@@ -130,6 +134,8 @@ fun MoviesSectionNow(
 	val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 	val themeMode = homeScreenViewModel.themeMode.collectAsState().value
 
+
+
 	Column(
 		modifier = modifier.fillMaxWidth()
 	) {
@@ -143,7 +149,7 @@ fun MoviesSectionNow(
 		) {
 			Text(
 				text = sectionTitle,
-				modifier = Modifier.padding(start = 10.dp, top = 12.dp),
+				modifier = Modifier.padding(start = 5.dp, top = 12.dp),
 				fontWeight = FontWeight.Bold,
 				style = MaterialTheme.typography.titleMedium
 			)
@@ -153,7 +159,7 @@ fun MoviesSectionNow(
 			}) {
 				Text(
 					text = "See All...",
-					modifier = Modifier.padding(end = 10.dp),
+					modifier = Modifier.padding(end = 5.dp),
 					fontWeight = FontWeight.Medium,
 					style = MaterialTheme.typography.labelMedium,
 					color = if (themeMode) Color.Yellow else Color(0xFF1A2C50)
@@ -164,7 +170,7 @@ fun MoviesSectionNow(
 		//list
 		LazyRow(
 			modifier = Modifier
-				.height(320.dp)
+				.height(400.dp)
 				.wrapContentWidth()
 				.padding(bottom = 9.dp)
 		) {
@@ -178,6 +184,7 @@ fun MoviesSectionNow(
 						}
 					}
 				}
+
 				LoadState.Loading -> {
 					item {
 						Row {
@@ -187,6 +194,7 @@ fun MoviesSectionNow(
 						}
 					}
 				}
+
 				is LoadState.NotLoading -> {
 					items(
 						count = movies.itemCount,
@@ -199,7 +207,8 @@ fun MoviesSectionNow(
 								height = 300.dp,
 								scaleType = ContentScale.FillBounds,
 								id = it.id,
-								onClick = onMovieClick
+								onClick = onMovieClick,
+								movie = it
 							)
 						}
 					}

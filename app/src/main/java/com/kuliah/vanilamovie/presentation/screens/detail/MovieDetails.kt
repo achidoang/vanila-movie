@@ -96,11 +96,12 @@ fun MovieDetails(
 					.background(MidnightBlack),
 				contentScale = ContentScale.Crop
 			)
+
 			Row(
 				modifier = Modifier
 					.padding(top = 150.dp, start = 8.dp, end = 8.dp)
 					.fillMaxWidth()
-					.height(220.dp),
+					.height(250.dp),
 				verticalAlignment = Alignment.Top,
 				horizontalArrangement = Arrangement.Start
 			) {
@@ -124,11 +125,12 @@ fun MovieDetails(
 					)
 				}
 
+
 				Column(
 					modifier = Modifier
 						.padding(top = 35.dp)
 						.weight(1f)
-						.height(380.dp)
+						.height(400.dp)
 				) {
 					Text(
 						text = movie.title,
@@ -161,6 +163,30 @@ fun MovieDetails(
 							Text(text = "-")
 						}
 					}
+
+					if (movie.genres.isNotEmpty()) {
+						Spacer(modifier = Modifier.size(4.dp))
+						Row(
+							modifier = Modifier
+								.fillMaxWidth(),
+							verticalAlignment = Alignment.Top
+						) {
+							Text(text = "Genres   : ")
+							Text(text = movie.genres.joinToString { it.name })
+						}
+					} else {
+						Spacer(modifier = Modifier.size(4.dp))
+						Row(
+							modifier = Modifier
+								.fillMaxWidth(),
+							verticalAlignment = Alignment.Top
+						) {
+							Text(text = "Genres: ")
+							Text(text = "-")
+						}
+					}
+
+
 					if (!movie.duration.isNullOrEmpty() && movie.duration != "0") {
 						Spacer(modifier = Modifier.height(4.dp))
 						Row(
@@ -182,8 +208,7 @@ fun MovieDetails(
 							Text(text = "-")
 						}
 					}
-					Spacer(modifier = Modifier.weight(1.2f))
-
+					Spacer(modifier = Modifier.weight(1f))
 					Button(
 						modifier = Modifier
 							.defaultMinSize(1.dp, 1.dp)
@@ -208,28 +233,29 @@ fun MovieDetails(
 							modifier = Modifier.size(33.dp)
 						)
 					}
-				}
 
+				}
 			}
 		}
-		Divider()
-//		HorizontalPager(
-//			state = pagerState,
-//			count = 2,
-//			modifier = Modifier.fillMaxSize().height(800.dp)
-//		) { page ->
-//			when (page) {
-//				0 -> DataDetailMovie(movie = movie)
-//				1 -> Text(
-//					text = "Tampilan bioskop yang ada",
-//					modifier = Modifier
-//						.fillMaxSize()
-//						.padding(16.dp)
-//				)
-//			}
-//		}
+		Spacer(modifier = Modifier.height(10.dp))
 
+		Divider()
 		DataDetailMovie(movie = movie)
+		//		HorizontalPager(
+		//			state = pagerState,
+		//			count = 2,
+		//			modifier = Modifier.fillMaxSize().height(800.dp)
+		//		) { page ->
+		//			when (page) {
+		//				0 -> DataDetailMovie(movie = movie)
+		//				1 -> Text(
+		//					text = "Tampilan bioskop yang ada",
+		//					modifier = Modifier
+		//						.fillMaxSize()
+		//						.padding(16.dp)
+		//				)
+		//			}
+		//		}
 
 		//		Column(
 		//			modifier = Modifier.fillMaxSize(),
@@ -405,15 +431,7 @@ fun DataDetailMovie(
 		Spacer(modifier = Modifier.height(10.dp))
 	}
 
-	Row(
-		modifier = Modifier
-			.fillMaxWidth()
-			.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-		verticalAlignment = Alignment.Top
-	) {
-		Text(text = "Genres: ", fontWeight = FontWeight.Bold, color = SeaGreen)
-		Text(text = movie.genres.joinToString { it.name })
-	}
+	//	1
 
 	Column(
 		modifier = Modifier.padding(horizontal = 10.dp)

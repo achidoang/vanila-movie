@@ -18,6 +18,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.kuliah.vanilamovie.R
@@ -30,13 +32,14 @@ import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSection
 import com.kuliah.vanilamovie.presentation.screens.home.components.MoviesSectionNow
 import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenEvent
 import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenViewModel
+import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelAssistedFactory
 
 @Composable
 fun HomeScreen(
 	modifier: Modifier,
 	showMovieDetail: (Int) -> Unit,
 	navController: NavHostController,
-	darkTheme: Boolean
+	darkTheme: Boolean,
 ) {
 	val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 
@@ -91,7 +94,7 @@ fun HomeScreen(
 
 			MoviesSection(
 				movies = popularMovies,
-				sectionTitle = "Popular",
+				sectionTitle = "Watch Popular Movie",
 				onMovieClick = {
 					showMovieDetail(it)
 				}
@@ -106,7 +109,7 @@ fun HomeScreen(
 			)
 
 
-			Spacer(modifier = Modifier.size(15.dp))
+			Spacer(modifier = Modifier.size(80.dp))
 		}
 	}
 }

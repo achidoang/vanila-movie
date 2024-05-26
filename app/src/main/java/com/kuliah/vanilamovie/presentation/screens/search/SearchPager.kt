@@ -27,6 +27,8 @@ fun SearchPager(
 	searchMovies: (String) -> Unit,
 	showMovieDetail: (Int) -> Unit,
 	searchShows: (String) -> Unit,
+	fetchMoviesByGenre: ( genreId: Long ) -> Unit,
+	fetchShowsByGenre: ( genreId: Long ) -> Unit,
 	showDetails: (Int) -> Unit
 ) {
 	val pagerState = rememberPagerState()
@@ -47,7 +49,8 @@ fun SearchPager(
 						modifier = Modifier
 							.fillMaxSize(),
 						searchMovies = searchMovies,
-						showMovieDetail = showMovieDetail
+						showMovieDetail = showMovieDetail,
+						fetchMoviesByGenre = fetchMoviesByGenre
 					)
 				}
 				1 -> {
@@ -55,7 +58,8 @@ fun SearchPager(
 						modifier = Modifier
 							.fillMaxSize(),
 						searchShows = searchShows,
-						showDetails = showDetails
+						showDetails = showDetails,
+						fetchShowsByGenre = fetchShowsByGenre
 					)
 				}
 			}

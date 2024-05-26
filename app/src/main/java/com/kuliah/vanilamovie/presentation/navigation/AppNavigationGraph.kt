@@ -17,7 +17,6 @@ import com.kuliah.vanilamovie.presentation.screens.detail.MovieNowDetailScreen
 import com.kuliah.vanilamovie.presentation.screens.detail.ShowDetailScreen
 import com.kuliah.vanilamovie.presentation.screens.genres.GenreShowsResultScreen
 import com.kuliah.vanilamovie.presentation.screens.genres.GenresMovieResultScreen
-import com.kuliah.vanilamovie.presentation.screens.genres.GenresScreen
 import com.kuliah.vanilamovie.presentation.screens.home.HomeScreen
 import com.kuliah.vanilamovie.presentation.screens.player.PlayerScreen
 import com.kuliah.vanilamovie.presentation.screens.poster.PosterScreen
@@ -27,6 +26,7 @@ import com.kuliah.vanilamovie.presentation.screens.search.SearchPager
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.search.ShowsSearchResultScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
+import com.kuliah.vanilamovie.presentation.screens.ticket.TicketScreen
 import com.kuliah.vanilamovie.presentation.viewModel.genres.GenresMovieResultViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.genres.GenresShowsResultViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelAssistedFactory
@@ -78,13 +78,17 @@ fun AppNavigationGraph(
 			} )
 		}
 
+		composable(Route.Ticket.destination){
+			TicketScreen()
+		}
+
 
 		composable(route = Route.Search.destination) {
 			SearchScreen(modifier = modifier, searchMovies = {
 				navHostController.navigate("${Route.SearchMovies.destination}/$it")
 			}, showMovieDetail = {
 				navHostController.navigate("${Route.MovieDetail.destination}/$it")
-			})
+			}, fetchMoviesByGenre = {navHostController.navigate("${Route.MoviesGenreResult.destination}/$it")})
 		}
 
 		composable(
@@ -112,7 +116,7 @@ fun AppNavigationGraph(
 				navHostController.navigate("${Route.SearchShows.destination}/$it")
 			}, showDetails = { showId ->
 				navHostController.navigate("${Route.ShowDetail.destination}/$showId")
-			})
+			}, fetchShowsByGenre = {navHostController.navigate("${Route.ShowsGenreResult.destination}/$it")})
 		}
 
 		composable(route = Route.Pager.destination) {
@@ -122,7 +126,9 @@ fun AppNavigationGraph(
 				searchShows = {navHostController.navigate("${Route.SearchShows.destination}/$it")},
 				showDetails = { showId ->
 					navHostController.navigate("${Route.ShowDetail.destination}/$showId")
-				}
+				},
+				fetchMoviesByGenre = {navHostController.navigate("${Route.MoviesGenreResult.destination}/$it")},
+				fetchShowsByGenre = {navHostController.navigate("${Route.ShowsGenreResult.destination}/$it")}
 			)
 		}
 
@@ -146,13 +152,6 @@ fun AppNavigationGraph(
 				})
 		}
 
-		composable(route = Route.Genre.destination) {
-			GenresScreen(modifier = modifier, fetchMoviesByGenre = {
-				navHostController.navigate("${Route.MoviesGenreResult.destination}/$it")
-			}, fetchShowsByGenre = {
-				navHostController.navigate("${Route.ShowsGenreResult.destination}/$it")
-			})
-		}
 
 		composable(
 			route = Route.MoviesGenreResult.destination + "/{id}",

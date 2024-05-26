@@ -3,11 +3,15 @@ package com.kuliah.vanilamovie.presentation.common
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +24,7 @@ import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -27,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.kuliah.vanilamovie.domain.model.movie.Movie
+import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
 import com.kuliah.vanilamovie.presentation.theme.MidnightBlack
 import com.kuliah.vanilamovie.util.displayPosterImage
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +63,7 @@ fun PosterImage(
 		.build()
 
 
-	if ( width == null ) {
+	if (width == null) {
 		AsyncImage(
 			modifier = Modifier
 				.clip(RoundedCornerShape(cornerSize))
@@ -88,44 +95,63 @@ fun PosterWithText(
 	width: Dp? = null,
 	scaleType: ContentScale = ContentScale.Crop,
 	cornerSize: Dp = 8.dp,
+	movie: Movie,
 	horizontalPadding: Dp = 2.dp,
 	onClick: ((Int) -> Unit)? = null,
 	id: Int? = null,
 	text: String = "                Buy Ticket                "
 ) {
-	Box(
+	Column(
 		modifier = Modifier
 			.fillMaxWidth()
 			.wrapContentHeight()
+			.padding(horizontal = 15.dp)
 	) {
-		PosterImage(
-			imageUrl = imageUrl,
-			height = height,
-			width = width,
-			scaleType = scaleType,
-			cornerSize = cornerSize,
-			horizontalPadding = 10.dp,
-			onClick = onClick,
-			id = id
-		)
-
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
-				.align(Alignment.BottomCenter)
-				.clip(RoundedCornerShape(bottomStart = cornerSize, bottomEnd = cornerSize))
-				.background(Color(0xFF1A2C50))
-				.padding(vertical = 10.dp),
-			contentAlignment = Alignment.Center
+				.wrapContentHeight()
 		) {
-			Text(
-				text = text,
-				style = MaterialTheme.typography.bodyMedium.copy(
-					color = Yellow,
-					fontWeight = FontWeight.Bold
-				)
+			PosterImage(
+				imageUrl = imageUrl,
+				height = height,
+				width = width,
+				scaleType = scaleType,
+				cornerSize = cornerSize,
+				horizontalPadding = 10.dp,
+				onClick = onClick,
+				id = id
 			)
+
+			Box(
+				modifier = Modifier
+					.fillMaxWidth()
+					.align(Alignment.BottomCenter)
+					.clip(RoundedCornerShape(bottomStart = cornerSize, bottomEnd = cornerSize))
+					.background(Color(0xFF1A2C50))
+					.padding(vertical = 10.dp),
+				contentAlignment = Alignment.Center
+			) {
+				Text(
+					text = text,
+					style = MaterialTheme.typography.bodyMedium.copy(
+						color = Yellow,
+						fontWeight = FontWeight.Bold
+					)
+				)
+			}
 		}
+		// Menambahkan Text di bawah poster
+		Text(
+			modifier = Modifier
+				.padding(top = 10.dp)
+				.widthIn(max = if (width != null) width else Dp.Infinity)
+				.align(Alignment.CenterHorizontally),
+			text = movie.title,
+			style = MaterialTheme.typography.titleMedium,
+			fontWeight = FontWeight.Bold,
+			maxLines = 3,
+			textAlign = TextAlign.Center
+		)
 	}
 }
-

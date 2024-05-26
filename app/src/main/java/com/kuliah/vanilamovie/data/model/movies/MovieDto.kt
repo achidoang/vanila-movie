@@ -8,3 +8,5 @@ data class MovieDto(
 	val release_date: String?,
 	val vote_average: Double?
 )
+
+

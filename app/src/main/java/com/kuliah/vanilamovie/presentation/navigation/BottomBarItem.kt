@@ -1,9 +1,11 @@
 package com.kuliah.vanilamovie.presentation.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AirplaneTicket
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ManageSearch
 import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.MovieFilter
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Tv
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,9 +29,9 @@ data class BottomBarItem(
 				route = Route.Pager.destination
 			),
 			BottomBarItem(
-				label = "Genres",
-				icon = Icons.Filled.Movie,
-				route = Route.Genre.destination
+				label = "Ticket",
+				icon = Icons.Filled.MovieFilter,
+				route = Route.Ticket.destination
 			)
 		)
 	}
