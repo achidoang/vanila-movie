@@ -28,6 +28,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -61,6 +63,7 @@ fun ShowsScreen(
 	var id by remember {
 		mutableLongStateOf(0L)
 	}
+
 
 	when (topRatedTvShows.loadState.refresh) {
 		is LoadState.Error -> {
@@ -119,7 +122,8 @@ fun ShowsScreen(
 						currentPage = currentPage,
 						onIndicatorClick = {
 							// Handle page change if needed
-						}
+						},
+
 					)
 					Column(
 						modifier = modifier

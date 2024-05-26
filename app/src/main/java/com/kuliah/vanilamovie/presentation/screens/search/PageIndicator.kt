@@ -10,27 +10,36 @@ import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.kuliah.vanilamovie.presentation.theme.Black
+import com.kuliah.vanilamovie.presentation.theme.VanilaMovieTheme
 
 @Composable
 fun PageIndicator(
 	modifier: Modifier = Modifier,
 	currentPage: String,
-	onIndicatorClick: (String) -> Unit
+	onIndicatorClick: (String) -> Unit,
 ) {
 	Row(
 		modifier = modifier
 			.padding(16.dp)
 			.fillMaxWidth(),
-		horizontalArrangement = Arrangement.Center
+		horizontalArrangement = Arrangement.SpaceEvenly
 	) {
 		val pages = listOf("Movies", "Shows")
 		pages.forEach { page ->
@@ -52,11 +61,13 @@ fun PageIndicator(
 				} else {
 					MaterialTheme.typography.bodyLarge
 				},
-				fontWeight = if (page == currentPage){
+				fontWeight = if (page == currentPage) {
 					FontWeight.Bold
 				} else {
 					FontWeight.Normal
-				}
+				},
+				textAlign = TextAlign.Center,
+				fontSize = 20.sp // Ukuran font bisa disesuaikan
 			)
 		}
 	}
@@ -74,3 +85,17 @@ fun Modifier.underline() = this.then(
 		)
 	}
 )
+
+@Preview(showBackground = true)
+@Composable
+fun PageIndicatorPreview() {
+
+	VanilaMovieTheme {
+		var currentPage by remember { mutableStateOf("Movies") }
+
+		PageIndicator(
+			currentPage = currentPage,
+			onIndicatorClick = { page -> currentPage = page }
+		)
+	}
+}

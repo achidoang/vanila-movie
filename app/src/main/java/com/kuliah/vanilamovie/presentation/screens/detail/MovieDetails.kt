@@ -51,6 +51,7 @@ import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
 import com.kuliah.vanilamovie.domain.model.valueObjects.Company
 import com.kuliah.vanilamovie.domain.model.valueObjects.Country
 import com.kuliah.vanilamovie.domain.model.valueObjects.Genre
+import com.kuliah.vanilamovie.presentation.screens.bioskop.BioskopScreen
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
 import com.kuliah.vanilamovie.presentation.theme.DodgerBlue
@@ -125,137 +126,28 @@ fun MovieDetails(
 					)
 				}
 
-
-				Column(
-					modifier = Modifier
-						.padding(top = 35.dp)
-						.weight(1f)
-						.height(400.dp)
-				) {
-					Text(
-						text = movie.title,
-						fontWeight = FontWeight.ExtraBold,
-						style = MaterialTheme.typography.titleLarge,
-						modifier = Modifier
-							.fillMaxWidth(),
-						maxLines = 3
-					)
-					if (movie.rating != 0.toDouble()) {
-						Spacer(modifier = Modifier.size(11.dp))
-						val rating = String.format("%.1f", movie.rating)
-						Row(
-							modifier = Modifier
-								.fillMaxWidth(),
-							verticalAlignment = Alignment.Top
-						) {
-							Text(text = "Rating    :")
-							Text(text = "$rating rating")
-						}
-
-					} else {
-						Spacer(modifier = Modifier.height(4.dp))
-						Row(
-							modifier = Modifier
-								.fillMaxWidth(),
-							verticalAlignment = Alignment.Top
-						) {
-							Text(text = "Rating    : ")
-							Text(text = "-")
-						}
-					}
-
-					if (movie.genres.isNotEmpty()) {
-						Spacer(modifier = Modifier.size(4.dp))
-						Row(
-							modifier = Modifier
-								.fillMaxWidth(),
-							verticalAlignment = Alignment.Top
-						) {
-							Text(text = "Genres   : ")
-							Text(text = movie.genres.joinToString { it.name })
-						}
-					} else {
-						Spacer(modifier = Modifier.size(4.dp))
-						Row(
-							modifier = Modifier
-								.fillMaxWidth(),
-							verticalAlignment = Alignment.Top
-						) {
-							Text(text = "Genres: ")
-							Text(text = "-")
-						}
-					}
+				DataDetailMovie1(onPlayButtonClick = onPlayButtonClick, movie = movie)
 
 
-					if (!movie.duration.isNullOrEmpty() && movie.duration != "0") {
-						Spacer(modifier = Modifier.height(4.dp))
-						Row(
-							modifier = Modifier
-								.fillMaxWidth(),
-							verticalAlignment = Alignment.Top
-						) {
-							Text(text = "Duration : ")
-							Text(text = convertMinutesToHoursAndMinutes(movie.duration.toInt()))
-						}
-					} else {
-						Spacer(modifier = Modifier.height(4.dp))
-						Row(
-							modifier = Modifier
-								.fillMaxWidth(),
-							verticalAlignment = Alignment.Top
-						) {
-							Text(text = "Duration : ")
-							Text(text = "-")
-						}
-					}
-					Spacer(modifier = Modifier.weight(1f))
-					Button(
-						modifier = Modifier
-							.defaultMinSize(1.dp, 1.dp)
-							.fillMaxWidth(),
-						colors = ButtonDefaults.buttonColors(
-							containerColor = DodgerBlue,
-							contentColor = Color.White,
-						),
-						shape = RoundedCornerShape(6.dp),
-						onClick = { onPlayButtonClick(movie.title) },
-						contentPadding = PaddingValues(
-							start = 20.dp,
-							end = 10.dp,
-							bottom = 5.dp,
-							top = 3.dp
-						)
-					) {
-						Text(text = "Preview", fontSize = 18.sp)
-						Icon(
-							imageVector = Icons.Rounded.PlayArrow,
-							contentDescription = "play button",
-							modifier = Modifier.size(33.dp)
-						)
-					}
 
-				}
 			}
 		}
 		Spacer(modifier = Modifier.height(10.dp))
 
 		Divider()
-		DataDetailMovie(movie = movie)
-		//		HorizontalPager(
-		//			state = pagerState,
-		//			count = 2,
-		//			modifier = Modifier.fillMaxSize().height(800.dp)
-		//		) { page ->
-		//			when (page) {
-		//				0 -> DataDetailMovie(movie = movie)
-		//				1 -> Text(
-		//					text = "Tampilan bioskop yang ada",
-		//					modifier = Modifier
-		//						.fillMaxSize()
-		//						.padding(16.dp)
-		//				)
-		//			}
-		//		}
+//		DataDetailMovie(movie = movie)
+				HorizontalPager(
+					state = pagerState,
+					count = 2,
+					modifier = Modifier
+						.fillMaxSize()
+						.height(800.dp)
+				) { page ->
+					when (page) {
+						0 -> DataDetailMovie(movie = movie)
+						1 -> BioskopScreen()
+					}
+				}
 
 		//		Column(
 		//			modifier = Modifier.fillMaxSize(),
@@ -282,6 +174,122 @@ fun MovieDetails(
 		//				}
 		//			}
 		//		}
+
+	}
+}
+
+@Composable
+fun DataDetailMovie1(
+	onPlayButtonClick: (String) -> Unit,
+	movie: MovieDetail
+){
+	Column(
+		modifier = Modifier
+			.padding(top = 35.dp)
+			//			.weight(1f)
+			.height(400.dp)
+	) {
+		Text(
+			text = movie.title,
+			fontWeight = FontWeight.ExtraBold,
+			style = MaterialTheme.typography.titleLarge,
+			modifier = Modifier
+				.fillMaxWidth(),
+			maxLines = 3
+		)
+		if (movie.rating != 0.toDouble()) {
+			Spacer(modifier = Modifier.size(11.dp))
+			val rating = String.format("%.1f", movie.rating)
+			Row(
+				modifier = Modifier
+					.fillMaxWidth(),
+				verticalAlignment = Alignment.Top
+			) {
+				Text(text = "Rating    :")
+				Text(text = "$rating rating")
+			}
+
+		} else {
+			Spacer(modifier = Modifier.height(4.dp))
+			Row(
+				modifier = Modifier
+					.fillMaxWidth(),
+				verticalAlignment = Alignment.Top
+			) {
+				Text(text = "Rating    : ")
+				Text(text = "-")
+			}
+		}
+
+		if (movie.genres.isNotEmpty()) {
+			Spacer(modifier = Modifier.size(4.dp))
+			Row(
+				modifier = Modifier
+					.fillMaxWidth(),
+				verticalAlignment = Alignment.Top
+			) {
+				Text(text = "Genres   : ")
+				Text(text = movie.genres.joinToString { it.name })
+			}
+		} else {
+			Spacer(modifier = Modifier.size(4.dp))
+			Row(
+				modifier = Modifier
+					.fillMaxWidth(),
+				verticalAlignment = Alignment.Top
+			) {
+				Text(text = "Genres: ")
+				Text(text = "-")
+			}
+		}
+
+
+		if (!movie.duration.isNullOrEmpty() && movie.duration != "0") {
+			Spacer(modifier = Modifier.height(4.dp))
+			Row(
+				modifier = Modifier
+					.fillMaxWidth(),
+				verticalAlignment = Alignment.Top
+			) {
+				Text(text = "Duration : ")
+				Text(text = convertMinutesToHoursAndMinutes(movie.duration.toInt()))
+			}
+		} else {
+			Spacer(modifier = Modifier.height(4.dp))
+			Row(
+				modifier = Modifier
+					.fillMaxWidth(),
+				verticalAlignment = Alignment.Top
+			) {
+				Text(text = "Duration : ")
+				Text(text = "-")
+			}
+		}
+		Spacer(modifier = Modifier.weight(1f))
+		Button(
+			modifier = Modifier
+				.defaultMinSize(1.dp, 1.dp)
+				.fillMaxWidth(),
+			colors = ButtonDefaults.buttonColors(
+				containerColor = DodgerBlue,
+				contentColor = Color.White,
+			),
+			shape = RoundedCornerShape(6.dp),
+			onClick = { onPlayButtonClick(movie.title) },
+			contentPadding = PaddingValues(
+				start = 20.dp,
+				end = 10.dp,
+				bottom = 5.dp,
+				top = 3.dp
+			)
+		) {
+			Text(text = "Preview", fontSize = 18.sp)
+			Icon(
+				imageVector = Icons.Rounded.PlayArrow,
+				contentDescription = "play button",
+				modifier = Modifier.size(33.dp)
+			)
+		}
 
 	}
 }
