@@ -1,4 +1,4 @@
-package com.kuliah.vanilamovie.presentation.screens.search
+package com.kuliah.vanilamovie.presentation.common
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
@@ -18,15 +18,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kuliah.vanilamovie.presentation.theme.Black
 import com.kuliah.vanilamovie.presentation.theme.VanilaMovieTheme
 
 @Composable
@@ -42,6 +38,50 @@ fun PageIndicator(
 		horizontalArrangement = Arrangement.SpaceEvenly
 	) {
 		val pages = listOf("Movies", "Shows")
+		pages.forEach { page ->
+			val targetAlpha = if (page == currentPage) 1f else 0.5f // Adjust alpha for fade effect
+			val alpha by animateFloatAsState(targetValue = targetAlpha)
+
+			Text(
+				text = page,
+				color = MaterialTheme.colorScheme.onBackground,
+				modifier = Modifier
+					.padding(horizontal = 8.dp)
+					.clickable { onIndicatorClick(page) }
+					.then(
+						if (page == currentPage) Modifier.underline() else Modifier
+					)
+					.alpha(alpha),
+				style = if (page == currentPage) {
+					MaterialTheme.typography.bodyLarge
+				} else {
+					MaterialTheme.typography.bodyLarge
+				},
+				fontWeight = if (page == currentPage) {
+					FontWeight.Bold
+				} else {
+					FontWeight.Normal
+				},
+				textAlign = TextAlign.Center,
+				fontSize = 20.sp // Ukuran font bisa disesuaikan
+			)
+		}
+	}
+}
+
+@Composable
+fun PageIndicatorBioskop(
+	modifier: Modifier = Modifier,
+	currentPage: String,
+	onIndicatorClick: (String) -> Unit,
+) {
+	Row(
+		modifier = modifier
+			.padding(16.dp)
+			.fillMaxWidth(),
+		horizontalArrangement = Arrangement.SpaceEvenly
+	) {
+		val pages = listOf("Sinopsis", "Schedule")
 		pages.forEach { page ->
 			val targetAlpha = if (page == currentPage) 1f else 0.5f // Adjust alpha for fade effect
 			val alpha by animateFloatAsState(targetValue = targetAlpha)

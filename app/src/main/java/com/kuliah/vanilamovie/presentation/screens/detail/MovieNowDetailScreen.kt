@@ -30,7 +30,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import com.kuliah.vanilamovie.presentation.common.AnimatedLargeImageShimmerEffect
 import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
-import com.kuliah.vanilamovie.presentation.screens.search.PageIndicator
 import com.kuliah.vanilamovie.presentation.screens.search.components.SearchScreenMovieItem
 import com.kuliah.vanilamovie.presentation.viewModel.home.HomeScreenViewModel
 

@@ -28,8 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,8 +36,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
 import com.kuliah.vanilamovie.presentation.common.SearchWidget
-import com.kuliah.vanilamovie.presentation.screens.search.PageIndicator
-import com.kuliah.vanilamovie.presentation.screens.shows.components.ShowsSection
+import com.kuliah.vanilamovie.presentation.common.PageIndicator
 import com.kuliah.vanilamovie.presentation.viewModel.genres.GenresViewModel
 import com.kuliah.vanilamovie.presentation.viewModel.shows.ShowsScreenEvent
 import com.kuliah.vanilamovie.presentation.viewModel.shows.ShowsViewModel

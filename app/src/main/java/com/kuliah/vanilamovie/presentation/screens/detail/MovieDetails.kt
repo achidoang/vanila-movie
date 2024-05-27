@@ -143,7 +143,7 @@ fun MovieDetails(
 					count = 2,
 					modifier = Modifier
 						.fillMaxSize()
-						.height(200.dp)
+						.height(480.dp)
 				) { page ->
 					when (page) {
 						0 -> DetailDataMovie(movie = movie)
