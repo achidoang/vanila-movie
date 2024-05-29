@@ -14,6 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
 import com.kuliah.vanilamovie.presentation.theme.SeaGreen
 import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModel
@@ -28,7 +31,8 @@ fun MovieDetailScreen(
 	modifier: Modifier,
 	assistedFactory: MovieDetailScreenViewModelAssistedFactory,
 	showMoviePoster: (String) -> Unit,
-	watchVideoPreview: (String) -> Unit
+	watchVideoPreview: (String) -> Unit,
+	navController: NavHostController
 ) {
 
 	val detailViewModel =  viewModel(
@@ -60,7 +64,7 @@ fun MovieDetailScreen(
 		}
 		is Resource.Success -> {
 			val movie = movieDetailState.result
-			MovieDetails(movie = movie, showMoviePoster, onPlayButtonClick = watchVideoPreview)
+			MovieDetails(movie = movie, showMoviePoster, onPlayButtonClick = watchVideoPreview, navController = navController)
 		}
 	}
 }

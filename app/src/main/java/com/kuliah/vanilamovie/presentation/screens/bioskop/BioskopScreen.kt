@@ -3,6 +3,7 @@ package com.kuliah.vanilamovie.presentation.screens.bioskop
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,21 +17,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MovieCreation
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +58,7 @@ import com.kuliah.vanilamovie.util.formatDate
 import com.kuliah.vanilamovie.util.separateWithCommas
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.format.TextStyle
 import java.util.Calendar
 
 
@@ -66,7 +74,8 @@ fun BioskopScreen(
 	val dates = remember { (0..2).map { today.plusDays(it.toLong()) } }
 
 
-	val currentPage = "Schedule" // Set the current page to "Shows" by default or based on your logic
+	val currentPage =
+		"Schedule" // Set the current page to "Shows" by default or based on your logic
 
 	Column(
 		modifier = modifier
@@ -168,7 +177,8 @@ fun BioskopScreen(
 @Composable
 fun DetailDataMovie(movie: MovieDetail) {
 
-	val currentPage = "Sinopsis" // Set the current page to "Shows" by default or based on your logic
+	val currentPage =
+		"Sinopsis" // Set the current page to "Shows" by default or based on your logic
 
 
 	Column(
@@ -345,6 +355,82 @@ fun DetailDataMovie(movie: MovieDetail) {
 					color = SeaGreen
 				)
 				Text(text = movie.productionCountries.joinToString { it.name })
+			}
+		}
+	}
+}
+
+@Composable
+fun TimeComp(
+	time: String,
+	isSelected: Boolean = false,
+	onClick: (String) -> Unit = {}
+){
+	val color = when {
+		isSelected -> Yellow
+		else -> Yellow.copy(alpha = 0.15f)
+	}
+
+	Surface(
+		modifier = Modifier
+			.wrapContentSize()
+			.clip(RoundedCornerShape(16.dp))
+			.clickable {
+				onClick(time)
+			}, shape = RoundedCornerShape(16.dp), color = color
+	) {
+		Text(text = time,
+			style = MaterialTheme.typography.labelSmall,
+			modifier = Modifier.padding(12.dp))
+
+	}
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun DateComp(
+	date: LocalDate,
+	isSelected: Boolean = false,
+	onClick: (LocalDate) -> Unit = {},
+) {
+	val color = when {
+		isSelected -> Yellow
+		else -> Yellow.copy(alpha = 0.15f)
+	}
+
+	val textBg = when {
+		isSelected -> Color.White
+		else -> Color.Transparent
+	}
+
+	Surface(
+		modifier = Modifier
+			.wrapContentSize()
+			.clip(RoundedCornerShape(16.dp))
+			.clickable {
+				onClick(date)
+			}, shape = RoundedCornerShape(16.dp), color = color
+	) {
+		Column(
+			modifier = Modifier.padding(12.dp),
+			horizontalAlignment = Alignment.CenterHorizontally,
+			verticalArrangement = Arrangement.spacedBy(8.dp)
+		) {
+			Text(
+				text = date.month.getDisplayName(TextStyle.SHORT, java.util.Locale.getDefault()),
+				style = MaterialTheme.typography.labelSmall
+			)
+
+			Box(
+				modifier = Modifier
+					.clip(CircleShape)
+					.background(textBg)
+					.padding(4.dp)
+			) {
+				Text(
+					text = date.dayOfMonth.toString(),
+					style = MaterialTheme.typography.labelSmall
+				)
 			}
 		}
 	}

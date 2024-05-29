@@ -25,6 +25,7 @@ import com.kuliah.vanilamovie.presentation.screens.search.MoviesSearchResultScre
 import com.kuliah.vanilamovie.presentation.screens.search.SearchPager
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.search.ShowsSearchResultScreen
+import com.kuliah.vanilamovie.presentation.screens.seat.SeatSelectorScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
 import com.kuliah.vanilamovie.presentation.screens.ticket.TicketScreen
 import com.kuliah.vanilamovie.presentation.viewModel.genres.GenresMovieResultViewModelAssistedFactory
@@ -82,6 +83,10 @@ fun AppNavigationGraph(
 			TicketScreen()
 		}
 
+		
+		composable(Route.Seat.destination){
+			SeatSelectorScreen()
+		}
 
 		composable(route = Route.Search.destination) {
 			SearchScreen(modifier = modifier, searchMovies = {
@@ -196,7 +201,8 @@ fun AppNavigationGraph(
 				},
 				watchVideoPreview = { movieName ->
 					navHostController.navigate("${Route.MoviesPlayer.destination}/$movieName")
-				})
+				},
+				navController = navHostController)
 		}
 
 		composable(

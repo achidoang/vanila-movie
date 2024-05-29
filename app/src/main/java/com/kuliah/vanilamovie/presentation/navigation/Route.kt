@@ -17,5 +17,6 @@ sealed class Route( val destination: String ) {
 	data object Pager: Route("pager")
 	data object MovieNow: Route("movie_now")
 	data object Ticket: Route("ticket")
+	data object Seat: Route("seat")
 }
 

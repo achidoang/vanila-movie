@@ -1,9 +1,11 @@
 package com.kuliah.vanilamovie.presentation.screens.detail
 
 import android.os.Build
+import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MovieCreation
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,10 +35,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -43,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -52,8 +59,11 @@ import com.kuliah.vanilamovie.domain.model.valueObjects.Company
 import com.kuliah.vanilamovie.domain.model.valueObjects.Country
 import com.kuliah.vanilamovie.domain.model.valueObjects.Genre
 import com.kuliah.vanilamovie.presentation.common.DataDetailMovie
+import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.screens.bioskop.BioskopScreen
+import com.kuliah.vanilamovie.presentation.screens.bioskop.DateComp
 import com.kuliah.vanilamovie.presentation.screens.bioskop.DetailDataMovie
+import com.kuliah.vanilamovie.presentation.screens.bioskop.TimeComp
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
 import com.kuliah.vanilamovie.presentation.theme.DodgerBlue
@@ -66,6 +76,7 @@ import com.kuliah.vanilamovie.util.displayOriginalImage
 import com.kuliah.vanilamovie.util.displayPosterImage
 import com.kuliah.vanilamovie.util.formatDate
 import com.kuliah.vanilamovie.util.separateWithCommas
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -73,15 +84,17 @@ import com.kuliah.vanilamovie.util.separateWithCommas
 fun MovieDetails(
 	movie: MovieDetail,
 	showMoviePoster: (String) -> Unit,
-	onPlayButtonClick: (String) -> Unit
+	onPlayButtonClick: (String) -> Unit,
+	navController: NavHostController
 ) {
 
-	val pagerState = rememberPagerState()
+
+	val scrollState = rememberScrollState()
 
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
-			.verticalScroll(rememberScrollState())
+			.verticalScroll(scrollState)
 	) {
 
 		Box(
@@ -134,49 +147,72 @@ fun MovieDetails(
 
 			}
 		}
-		Spacer(modifier = Modifier.height(10.dp))
+		Spacer(modifier = Modifier.height(5.dp))
 
 		Divider()
-//		DataDetailMovie(movie = movie)
-				HorizontalPager(
-					state = pagerState,
-					count = 2,
-					modifier = Modifier
-						.fillMaxSize()
-						.height(480.dp)
-				) { page ->
-					when (page) {
-						0 -> DetailDataMovie(movie = movie)
-						1 -> BioskopScreen()
-					}
-				}
+		DataDetailMovie(movie = movie)
 
-		//		Column(
-		//			modifier = Modifier.fillMaxSize(),
-		//			horizontalAlignment = Alignment.CenterHorizontally
-		//
-		//		) {
-		//
-		//
-		//			HorizontalPager(
-		//				state = pagerState,
-		//				count = 2,
-		//				modifier = Modifier.weight(1f)
-		//
-		//			) { page ->
-		//				when (page) {
-		//					0 -> {
-		//						Text(text = "Data Movie")
-		//					}
-		//
-		//					1 -> {
-		//						Text(text = "Booking Movie")
-		//
-		//					}
-		//				}
-		//			}
-		//		}
-
+		Button(
+			onClick = { navController.navigate(Route.Seat.destination)},
+			modifier = Modifier
+				.fillMaxWidth()
+				//				.padding(16.dp)
+				.height(56.dp),
+			shape = RectangleShape // Mengatur bentuk button menjadi persegi panjang
+		) {
+			Icon(
+				imageVector = Icons.Filled.MovieCreation,
+				contentDescription = "Check Icon",
+				modifier = Modifier.padding(end = 8.dp)
+			)
+			Text(text = "Buy Ticket")
+		}
+//		HorizontalPager(
+//			state = pagerState,
+//			count = 2,
+//			modifier = Modifier
+//				.fillMaxSize()
+//				.height(450.dp)
+////				.weight(1f)
+//		) { page ->
+//			when (page) {
+//				0 ->
+//					DetailDataMovie(movie = movie)
+//
+//				1 -> Column(
+//					modifier = Modifier.padding(bottom = 20.dp)
+//
+//				) {
+//					Row(
+//						modifier = Modifier.horizontalScroll(dateScrollState),
+//						horizontalArrangement = Arrangement.spacedBy(8.dp)
+//					) {
+//						for (i in 0..14) {
+//							val date = today.plusDays(i.toLong())
+//							DateComp(
+//								date = date, isSelected = selectedData.value == date
+//							) {
+//								selectedData.value = it
+//							}
+//						}
+//					}
+//
+//					Row(
+//						modifier = Modifier.horizontalScroll(timeScrollState),
+//						horizontalArrangement = Arrangement.spacedBy(8.dp)
+//					) {
+//						for (i in 0..22 step 2) {
+//							val time = "$i:00"
+//							TimeComp(
+//								time = time, isSelected = selectedTime.value == time
+//							) {
+//								selectedTime.value = it
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 	}
 }
 
@@ -184,7 +220,7 @@ fun MovieDetails(
 fun DataDetailMovie1(
 	onPlayButtonClick: (String) -> Unit,
 	movie: MovieDetail
-){
+) {
 	Column(
 		modifier = Modifier
 			.padding(top = 35.dp)
@@ -218,7 +254,7 @@ fun DataDetailMovie1(
 					.fillMaxWidth(),
 				verticalAlignment = Alignment.Top
 			) {
-				Text(text = "Rating    : ")
+				Text(text = "Rating    :")
 				Text(text = "-")
 			}
 		}
@@ -302,36 +338,6 @@ fun DataDetailMovie1(
 @Composable
 fun DetailPreview() {
 	VanilaMovieTheme {
-		MovieDetails(
-			onPlayButtonClick = {},
-			showMoviePoster = {},
-			movie = MovieDetail(
-				id = 1,
-				budget = 10000,
-				genres = listOf(
-					Genre(id = 1, name = "Science"),
-					Genre(id = 2, name = "Action"),
-					Genre(id = 3, name = "Mystery"),
-				),
-				language = "English",
-				title = "Bandland Hunters",
-				overview = "After a deadly earthquake turns Seoul into a lawless badland, a fearless huntsman springs into action to rescue a teenager abducted by a mad doctor.",
-				posterPath = null,
-				backdropPath = null,
-				productionCountries = listOf(
-					Country("Japan"),
-					Country("Singapore")
-				),
-				productionCompanies = listOf(
-					Company(id = 1, logoPath = null, name = "Netflix")
-				),
-				releaseDate = "2023-15-05",
-				revenue = 20000L,
-				duration = "105",
-				status = "Released",
-				tagline = "One last hunt to save us all",
-				rating = 6.4
-			)
-		)
+
 	}
 }
