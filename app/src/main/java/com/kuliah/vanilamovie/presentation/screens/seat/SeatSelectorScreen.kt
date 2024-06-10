@@ -208,7 +208,7 @@ fun SeatSelectorScreen(
 						modifier = Modifier.horizontalScroll(dateScrollState),
 						horizontalArrangement = Arrangement.spacedBy(8.dp)
 					) {
-						for (i in 0..14) {
+						for (i in 0..6) {
 							val date = today.plusDays(i.toLong())
 							DateComp(
 								date = date, isSelected = selectedDate.value == date
@@ -222,7 +222,7 @@ fun SeatSelectorScreen(
 						modifier = Modifier.horizontalScroll(timeScrollState),
 						horizontalArrangement = Arrangement.spacedBy(8.dp)
 					) {
-						for (i in 0..22 step 2) {
+						for (i in 9..22 step 2) {
 							val time = "$i:00"
 							TimeComp(
 								time = time, isSelected = selectedTime.value == time

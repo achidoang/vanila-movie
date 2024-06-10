@@ -61,7 +61,6 @@ import com.kuliah.vanilamovie.domain.model.valueObjects.Genre
 import com.kuliah.vanilamovie.presentation.common.DataDetailMovie
 import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.screens.bioskop.DateComp
-import com.kuliah.vanilamovie.presentation.screens.bioskop.DetailDataMovie
 import com.kuliah.vanilamovie.presentation.screens.bioskop.TimeComp
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
@@ -160,87 +159,95 @@ fun MovieNowDetails(
 	onPlayButtonClick: (String) -> Unit,
 	navController: NavHostController
 ) {
-
-
 	val scrollState = rememberScrollState()
 
-	Column(
+	Box(
 		modifier = Modifier
-			.fillMaxWidth()
+			.fillMaxSize()
 			.verticalScroll(scrollState)
 	) {
-
-		Box(
+		Column(
 			modifier = Modifier
 				.fillMaxWidth()
-				.wrapContentHeight()
+				.padding(bottom = 56.dp) // Padding bawah untuk memberi ruang bagi tombol "Buy Ticket"
 		) {
-			AsyncImage(
-				model = displayOriginalImage(movie.backdropPath),
-				contentDescription = "backdrop_image",
+			Box(
 				modifier = Modifier
-					.align(Alignment.TopStart)
 					.fillMaxWidth()
-					.height(180.dp)
-					.background(MidnightBlack),
-				contentScale = ContentScale.Crop
-			)
-
-			Row(
-				modifier = Modifier
-					.padding(top = 150.dp, start = 8.dp, end = 8.dp)
-					.fillMaxWidth()
-					.height(250.dp),
-				verticalAlignment = Alignment.Top,
-				horizontalArrangement = Arrangement.Start
+					.wrapContentHeight()
 			) {
-				Card(
-					onClick = {
-						movie.posterPath?.let { posterPath ->
-							showMoviePoster(posterPath)
-						}
-					},
+				// Your content here
+				AsyncImage(
+					model = displayOriginalImage(movie.backdropPath),
+					contentDescription = "backdrop_image",
 					modifier = Modifier
-						.padding(start = 10.dp, end = 20.dp)
-						.width(110.dp)
+						.align(Alignment.TopStart)
+						.fillMaxWidth()
 						.height(180.dp)
-						.clip(RoundedCornerShape(8.dp)),
+						.background(MidnightBlack),
+					contentScale = ContentScale.Crop
+				)
+
+				Row(
+					modifier = Modifier
+						.padding(top = 150.dp, start = 8.dp, end = 8.dp)
+						.fillMaxWidth()
+						.height(250.dp),
+					verticalAlignment = Alignment.Top,
+					horizontalArrangement = Arrangement.Start
 				) {
-					AsyncImage(
-						modifier = Modifier.background(Color.DarkGray),
-						model = displayPosterImage(movie.posterPath),
-						contentDescription = "Poster Image",
-						contentScale = ContentScale.Crop,
-					)
+					Card(
+						onClick = {
+							movie.posterPath?.let { posterPath ->
+								showMoviePoster(posterPath)
+							}
+						},
+						modifier = Modifier
+							.padding(start = 10.dp, end = 20.dp)
+							.width(110.dp)
+							.height(180.dp)
+							.clip(RoundedCornerShape(8.dp)),
+					) {
+						AsyncImage(
+							modifier = Modifier.background(Color.DarkGray),
+							model = displayPosterImage(movie.posterPath),
+							contentDescription = "Poster Image",
+							contentScale = ContentScale.Crop,
+						)
+					}
+
+					DataDetailMovie1(onPlayButtonClick = onPlayButtonClick, movie = movie)
+
 				}
-
-				DataDetailMovie1(onPlayButtonClick = onPlayButtonClick, movie = movie)
-
 			}
-		}
-		Spacer(modifier = Modifier.height(5.dp))
+			Spacer(modifier = Modifier.height(5.dp))
 
-		Divider()
-		DataDetailMovie(movie = movie)
+			Divider()
+			DataDetailMovie(movie = movie)
+		}
+
+		// Button "Buy Ticket" di luar Column, diposisikan di bagian bawah layar
 		Button(
 			onClick = { navController.navigate(Route.Seat.destination)},
+			colors = ButtonDefaults.buttonColors(
+				containerColor = Color(0xFF1A2C50),
+				contentColor = Color.White,
+			),
 			modifier = Modifier
 				.fillMaxWidth()
-				.background(Color(0xFF1A2C50))
-				//				.padding(16.dp)
-				.height(56.dp),
+				.height(56.dp)
+				.align(Alignment.BottomCenter), // Memposisikan tombol di bagian bawah layar
 			shape = RectangleShape // Mengatur bentuk button menjadi persegi panjang
 		) {
 			Icon(
 				imageVector = Icons.Filled.MovieCreation,
-				contentDescription = "Check Icon",
+				contentDescription = "Movie Icon",
 				modifier = Modifier.padding(end = 8.dp)
 			)
 			Text(text = "Buy Ticket")
 		}
 	}
 }
-
 @Composable
 fun DataDetailMovie1(
 	onPlayButtonClick: (String) -> Unit,
@@ -334,7 +341,7 @@ fun DataDetailMovie1(
 				.defaultMinSize(1.dp, 1.dp)
 				.fillMaxWidth(),
 			colors = ButtonDefaults.buttonColors(
-				containerColor = DodgerBlue,
+				containerColor = Color(0xFF1A2C50),
 				contentColor = Color.White,
 			),
 			shape = RoundedCornerShape(6.dp),

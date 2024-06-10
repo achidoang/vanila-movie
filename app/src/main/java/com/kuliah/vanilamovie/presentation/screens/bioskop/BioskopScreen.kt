@@ -55,196 +55,6 @@ import com.kuliah.vanilamovie.util.separateWithCommas
 import java.time.LocalDate
 import java.time.format.TextStyle
 
-
-
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun DetailDataMovie(movie: MovieDetail) {
-
-	val currentPage =
-		"Sinopsis" // Set the current page to "Shows" by default or based on your logic
-
-
-	Column(
-		verticalArrangement = Arrangement.Top,
-		horizontalAlignment = Alignment.Start
-	) {
-		PageIndicatorBioskop(
-			currentPage = currentPage,
-			onIndicatorClick = {
-				// Handle page change if needed
-			},
-		)
-		if (movie.tagline != "") {
-			Text(
-				text = movie.tagline ?: "",
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(bottom = 14.dp, start = 10.dp),
-				fontStyle = FontStyle.Italic,
-				fontWeight = FontWeight.Medium,
-				fontSize = 17.sp
-			)
-		}
-
-		if (!movie.overview.isNullOrEmpty()) {
-
-
-			Text(
-				text = "Overview",
-				Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-				fontSize = 18.sp,
-				fontWeight = FontWeight.Medium,
-				color = SeaGreen
-			)
-			Text(
-				text = movie.overview,
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-				color = MaterialTheme.colorScheme.onBackground
-			)
-		}
-
-		if (!movie.releaseDate.isNullOrEmpty()) {
-			Divider()
-			Row(
-				verticalAlignment = Alignment.CenterVertically,
-				horizontalArrangement = Arrangement.Center,
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(10.dp)
-			) {
-
-				if (movie.budget == 0L && movie.revenue == 0L) {
-					Row(
-						horizontalArrangement = Arrangement.Center,
-						verticalAlignment = Alignment.CenterVertically
-					) {
-						Text(
-							text = "${movie.status}:",
-							fontWeight = FontWeight.Bold,
-							modifier = Modifier.padding(end = 5.dp)
-						)
-						//                        Text(
-						//                            text = formatDate(movie.releaseDate),
-						//                            fontWeight = FontWeight.Bold,
-						//                            color = TomatoRed
-						//                        )
-						Text(
-							text = movie.releaseDate,
-							fontWeight = FontWeight.Bold,
-							color = TomatoRed
-						)
-					}
-
-				} else {
-					Box(
-						modifier = Modifier.padding(end = 10.dp)
-					) {
-						Text(
-							text = movie.status?.lowercase()!!,
-							fontSize = 12.sp,
-							modifier = Modifier.align(Alignment.TopEnd)
-						)
-						Text(
-							text = formatDate(movie.releaseDate),
-							modifier = Modifier.padding(top = 15.dp),
-							fontWeight = FontWeight.Bold,
-							color = TomatoRed,
-							maxLines = 1
-						)
-						//                    Text(
-						//                        text = "${movie.releaseDate}",
-						//                        modifier = Modifier.padding(top = 15.dp),
-						//                        fontWeight = FontWeight.Bold,
-						//                        color = PumpkinOrange
-						//                    )
-					}
-				}
-
-				if (movie.budget != 0L) {
-					Spacer(
-						modifier = Modifier
-							.height(24.dp)
-							.width(2.dp)
-							.background(color = Color.Gray)
-							.padding(10.dp)
-					)
-					Box(
-						modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-					) {
-						Text(
-							text = "input",
-							fontSize = 12.sp,
-							modifier = Modifier.align(Alignment.TopEnd)
-						)
-						Text(
-							text = "$${separateWithCommas(movie.budget)}",
-							modifier = Modifier.padding(top = 15.dp),
-							fontWeight = FontWeight.Bold,
-							color = TomatoRed,
-							maxLines = 1
-						)
-					}
-				}
-				if (movie.revenue != 0L) {
-					Spacer(
-						modifier = Modifier
-							.height(24.dp)
-							.width(2.dp)
-							.background(color = Color.Gray)
-							.padding(10.dp)
-					)
-					Box(
-						modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-					) {
-						Text(
-							text = "output",
-							fontSize = 12.sp,
-							modifier = Modifier.align(Alignment.TopEnd)
-						)
-						Text(
-							text = "$${separateWithCommas(movie.revenue)}",
-							modifier = Modifier.padding(top = 15.dp),
-							fontWeight = FontWeight.Bold,
-							color = TomatoRed,
-							maxLines = 1
-						)
-					}
-				}
-			}
-			Divider()
-			Spacer(modifier = Modifier.height(10.dp))
-		}
-
-		Column(
-			modifier = Modifier.padding(horizontal = 10.dp)
-		) {
-			if (movie.productionCompanies.isNotEmpty()) {
-				Text(
-					text = "Production Companies:",
-					fontWeight = FontWeight.Bold,
-					modifier = Modifier.padding(bottom = 4.dp),
-					color = SeaGreen
-				)
-				Text(text = movie.productionCompanies.joinToString { it.name })
-				Spacer(modifier = Modifier.size(12.dp))
-			}
-			if (movie.productionCountries.isNotEmpty()) {
-				Text(
-					text = "Production Countries:",
-					fontWeight = FontWeight.Bold,
-					modifier = Modifier.padding(bottom = 4.dp),
-					color = SeaGreen
-				)
-				Text(text = movie.productionCountries.joinToString { it.name })
-			}
-		}
-	}
-}
-
 @Composable
 fun TimeComp(
 	time: String,
@@ -265,7 +75,7 @@ fun TimeComp(
 	Surface(
 		modifier = Modifier
 			.wrapContentSize()
-			.width(50.dp)
+			.width(60.dp)
 			.height(40.dp)
 			.clip(RoundedCornerShape(16.dp))
 			.clickable {
@@ -276,7 +86,8 @@ fun TimeComp(
 				text = time,
 				style = MaterialTheme.typography.labelSmall,
 				color = textBg,
-				modifier = Modifier.padding(12.dp))
+				modifier = Modifier.padding(12.dp),
+				textAlign = TextAlign.Center)
 
 
 	}
@@ -309,18 +120,18 @@ fun DateComp(
 			}, shape = RoundedCornerShape(16.dp), color = color
 	) {
 		Column(
-			modifier = Modifier.padding(12.dp),
+			modifier = Modifier.padding(10.dp),
 			horizontalAlignment = Alignment.CenterHorizontally,
-			verticalArrangement = Arrangement.spacedBy(8.dp)
+			verticalArrangement = Arrangement.spacedBy(2.dp)
 		) {
-			Column {
 				Text(
 					text = date.month.getDisplayName(
 						TextStyle.SHORT,
 						java.util.Locale.getDefault()
 					),
 					style = MaterialTheme.typography.labelSmall,
-					color = textBg
+					color = textBg,
+					textAlign = TextAlign.Center
 				)
 				Text(
 					text = date.dayOfMonth.toString(),
@@ -328,15 +139,6 @@ fun DateComp(
 					color = textBg,
 					textAlign = TextAlign.Center
 				)
-
-			}
-//			Box(
-//				modifier = Modifier
-//					.clip(RoundedCornerShape(16.dp))
-//					.background(textBg)
-//					.padding(6.dp)
-//			) {
-//			}
 		}
 	}
 }

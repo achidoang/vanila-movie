@@ -99,7 +99,7 @@ fun PosterWithText(
 	horizontalPadding: Dp = 2.dp,
 	onClick: ((Int) -> Unit)? = null,
 	id: Int? = null,
-	text: String = "                Buy Ticket                "
+	text: String = "Buy Ticket"
 ) {
 	Column(
 		modifier = Modifier
@@ -125,7 +125,8 @@ fun PosterWithText(
 
 			Box(
 				modifier = Modifier
-					.fillMaxWidth()
+					.width(179.dp)
+					.wrapContentHeight()
 					.align(Alignment.BottomCenter)
 					.clip(RoundedCornerShape(bottomStart = cornerSize, bottomEnd = cornerSize))
 					.background(Color(0xFF1A2C50))
