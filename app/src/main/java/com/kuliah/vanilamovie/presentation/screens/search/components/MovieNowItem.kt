@@ -32,7 +32,7 @@ import com.kuliah.vanilamovie.presentation.theme.VanilaMovieTheme
 import com.kuliah.vanilamovie.util.convertToPercentage
 
 @Composable
-fun SearchScreenMovieItem(
+fun MovieNowItem(
 	showMovieDetail: (Int) -> Unit,
 	movie: Movie
 ) {
@@ -132,7 +132,7 @@ private fun ScoreBox(
 @Composable
 fun ScorePreview(){
 	VanilaMovieTheme {
-		SearchScreenMovieItem(
+		MovieNowItem(
 			showMovieDetail = {},
 			movie = Movie(
 				id = 1,

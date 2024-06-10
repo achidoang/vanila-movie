@@ -17,44 +17,56 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
 import com.kuliah.vanilamovie.presentation.screens.bioskop.DateComp
 import com.kuliah.vanilamovie.presentation.screens.bioskop.TimeComp
-import com.kuliah.vanilamovie.presentation.theme.LightGreen
+import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModel
+import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelAssistedFactory
+import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelFactory
 import java.time.LocalDate
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SeatSelectorScreen(
-//	navController: NavController
+//	movie: MovieDetail,
 ) {
+
+
 
 	val today = LocalDate.now()
 	val dateScrollState = rememberScrollState()
 	val timeScrollState = rememberScrollState()
 
-	val selectedData = remember {
+	val selectedDate = remember {
 		mutableStateOf<LocalDate?>(null)
 	}
 
@@ -65,6 +77,15 @@ fun SeatSelectorScreen(
 	val selectedSeat = remember {
 		mutableStateListOf<String>()
 	}
+
+	var showDialog by remember {
+		mutableStateOf(false)
+	}
+
+	var showIncompleteSelectionAlert by remember {
+		mutableStateOf(false)
+	}
+
 
 	Scaffold(
 		//		backgroundColor = LightGreen
@@ -80,12 +101,12 @@ fun SeatSelectorScreen(
 				),
 				verticalAlignment = Alignment.CenterVertically,
 			) {
-//				IconButton(onClick = {
-//					navController.popBackStack()
-//				}) {
-//					Icon(Icons.Filled.ArrowBack, contentDescription = "Back Button")
-//				}
-//				Spacer(modifier = Modifier.width(16.dp))
+				//				IconButton(onClick = {
+				//					navController.popBackStack()
+				//				}) {
+				//					Icon(Icons.Filled.ArrowBack, contentDescription = "Back Button")
+				//				}
+				//				Spacer(modifier = Modifier.width(16.dp))
 				Text(text = "Select Seat", style = MaterialTheme.typography.titleSmall)
 			}
 
@@ -99,7 +120,7 @@ fun SeatSelectorScreen(
 			) {
 				Text(
 					text = "Screen",
-					style = MaterialTheme.typography.bodyMedium.copy(color = Color.White)
+					style = MaterialTheme.typography.bodyMedium.copy(color = Black)
 				)
 			}
 
@@ -166,7 +187,7 @@ fun SeatSelectorScreen(
 				modifier = Modifier
 					.weight(1f)
 					.fillMaxWidth(),
-				color = Color.White,
+				color = Color(0xFF1A2C50),
 				shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
 			) {
 				Column(
@@ -179,6 +200,8 @@ fun SeatSelectorScreen(
 					Text(
 						text = "Select Seat",
 						style = MaterialTheme.typography.labelMedium,
+						color = White
+
 					)
 
 					Row(
@@ -188,9 +211,9 @@ fun SeatSelectorScreen(
 						for (i in 0..14) {
 							val date = today.plusDays(i.toLong())
 							DateComp(
-								date = date, isSelected = selectedData.value == date
+								date = date, isSelected = selectedDate.value == date
 							) {
-								selectedData.value = it
+								selectedDate.value = it
 							}
 						}
 					}
@@ -209,15 +232,109 @@ fun SeatSelectorScreen(
 						}
 					}
 
+					Row(
+						modifier = Modifier.fillMaxWidth(),
+						horizontalArrangement = Arrangement.SpaceBetween,
+						verticalAlignment = Alignment.CenterVertically,
+					) {
+						Column(
+							verticalArrangement = Arrangement.spacedBy(8.dp)
+						) {
+							Row {
+								Text(
+									text = "Price : ",
+									style = MaterialTheme.typography.titleMedium,
+									color = White
+								)
+								Text(
+									text = "Rp " + "${selectedSeat.size * 30000}",
+									style = MaterialTheme.typography.titleMedium,
+									color = White
+								)
+
+							}
+
+						}
+
+						Button(
+							onClick = {
+								if (selectedSeat.isEmpty() || selectedTime.value.isNullOrEmpty() || selectedDate.value == null) {
+									showIncompleteSelectionAlert = true
+								} else {
+									showDialog = true
+								}
+							},
+							modifier = Modifier
+								.wrapContentWidth()
+								.height(50.dp),
+							colors = ButtonDefaults.buttonColors(
+								Yellow
+							),
+							shape = RoundedCornerShape(32.dp),
+						) {
+							Text(text = "Check Out", color = Black)
+						}
+
+						if (showDialog) {
+							AlertDialog(
+								onDismissRequest = { showDialog = false },
+								title = { Text(text = "Konfirmasi") },
+								text = {
+									Column {
+//										Text(text = "Title : " + movie.title)
+										Text(text = "Price  : Rp " + "${selectedSeat.size * 30000}")
+										Text(text = "Time : ${selectedTime.value ?: "Belum dipilih"}")
+										Text(text = "Date : ${selectedDate.value ?: "Belum dipilih"}")
+										Text(
+											text = if (selectedSeat.isEmpty()) {
+												"Seats : Anda Belum memilih Kursi"
+											} else {
+												"Seats : ${selectedSeat.sorted().joinToString(", ")}"
+											}
+										)
+										Spacer(modifier = Modifier.height(20.dp))
+										Text("Apakah Anda yakin ingin melanjutkan ke halaman tiket?")
+									}
+								},
+								confirmButton = {
+									Button(
+										onClick = { showDialog = false }
+									) {
+										Text("Ya")
+									}
+								},
+								dismissButton = {
+									Button(
+										onClick = { showDialog = false }
+									) {
+										Text("Tidak")
+									}
+								}
+							)
+						}
+
+						if (showIncompleteSelectionAlert) {
+							AlertDialog(
+								onDismissRequest = { showIncompleteSelectionAlert = false },
+								title = { Text(text = "Perhatian") },
+								text = { Text("Anda harus memilih kursi, waktu, dan tanggal sebelum melanjutkan.") },
+								confirmButton = {
+									Button(
+										onClick = { showIncompleteSelectionAlert = false }
+									) {
+										Text("OK")
+									}
+								}
+							)
+						}
+
+					}
 				}
-
 			}
-
 		}
-
-
 	}
 }
+
 
 
 @Composable
@@ -229,13 +346,13 @@ fun SeatComp(
 ) {
 	val seatColor = when {
 		!isEnabled -> Color.Gray
-		isSelected -> Color.Yellow
+		isSelected -> Yellow
 		else -> Color.White
 	}
 
 	val textColor = when {
-		isSelected -> Color.White
-		else -> Color.Black
+		isSelected -> Color.DarkGray
+		else -> Black
 	}
 
 	Box(modifier = Modifier

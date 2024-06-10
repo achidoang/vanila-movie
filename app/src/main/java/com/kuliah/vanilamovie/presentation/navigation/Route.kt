@@ -10,6 +10,7 @@ sealed class Route( val destination: String ) {
 	data object SearchMovies: Route("sMovies")
 	data object SearchShows: Route("sShows")
 	data object MovieDetail: Route("mDetail")
+	data object MovieNowDetail: Route("movie_now_detail")
 	data object PosterImage: Route("poster_image")
 	data object ShowDetail: Route("show_detail")
 	data object MoviesPlayer: Route("movies_player")

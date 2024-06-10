@@ -18,7 +18,7 @@ interface MovieApi {
 		@Query("perPage") perPage: Int
 	) : MovieResponse
 
-	@GET("movie/now_playing?region=ID&api_key=${API_KEY}")
+	@GET("movie/now_playing?sort_by=popularity.desc&region=ID&api_key=${API_KEY}")
 	suspend fun fetchNowPlayingMovies(
 		@Query("page") page: Int,
 		@Query("perPage") perPage: Int
@@ -42,14 +42,14 @@ interface MovieApi {
 		@Query("perPage") perPage: Int
 	) : MovieResponse
 
-	@GET("search/movie?api_key=${API_KEY}")
+	@GET("search/movie?include_adult=false&api_key=${API_KEY}")
 	suspend fun searchMovies(
 		@Query("page") page: Int,
 		@Query("perPage") perPage: Int,
 		@Query("query") query: String
 	) : MovieResponse
 
-	@GET("search/tv?api_key=${API_KEY}")
+	@GET("search/tv?include_adult=false&api_key=${API_KEY}")
 	suspend fun searchShows(
 		@Query("page") page: Int,
 		@Query("perPage") perPage: Int,

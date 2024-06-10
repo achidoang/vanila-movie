@@ -13,7 +13,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.kuliah.vanilamovie.presentation.screens.detail.MovieDetailScreen
-import com.kuliah.vanilamovie.presentation.screens.detail.MovieNowDetailScreen
+import com.kuliah.vanilamovie.presentation.screens.detail.MovieNowDetailsScreen
+import com.kuliah.vanilamovie.presentation.screens.detail.MovieNowScreen
 import com.kuliah.vanilamovie.presentation.screens.detail.ShowDetailScreen
 import com.kuliah.vanilamovie.presentation.screens.genres.GenreShowsResultScreen
 import com.kuliah.vanilamovie.presentation.screens.genres.GenresMovieResultScreen
@@ -25,9 +26,11 @@ import com.kuliah.vanilamovie.presentation.screens.search.MoviesSearchResultScre
 import com.kuliah.vanilamovie.presentation.screens.search.SearchPager
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.search.ShowsSearchResultScreen
+import com.kuliah.vanilamovie.presentation.screens.seat.SeatScreen
 import com.kuliah.vanilamovie.presentation.screens.seat.SeatSelectorScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
 import com.kuliah.vanilamovie.presentation.screens.ticket.TicketScreen
+import com.kuliah.vanilamovie.presentation.viewModel.SeatScreenViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.genres.GenresMovieResultViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.genres.GenresShowsResultViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelAssistedFactory
@@ -64,6 +67,9 @@ fun AppNavigationGraph(
 				showMovieDetail = {
 					navHostController.navigate("${Route.MovieDetail.destination}/$it")
 				},
+				showMovieNowDetail = {
+					navHostController.navigate("${Route.MovieNowDetail.destination}/$it")
+				},
 				navController = navHostController, // Teruskan navController ke HomeScreen
 				darkTheme = darkTheme // Ubah sesuai kebutuhan Anda
 			)
@@ -74,8 +80,8 @@ fun AppNavigationGraph(
 		}
 
 		composable(Route.MovieNow.destination){
-			MovieNowDetailScreen(modifier = modifier, showMovieDetail = {
-				navHostController.navigate("${Route.MovieDetail.destination}/$it")
+			MovieNowScreen(modifier = modifier, showMovieDetail = {
+				navHostController.navigate("${Route.MovieNowDetail.destination}/$it")
 			} )
 		}
 
@@ -84,7 +90,17 @@ fun AppNavigationGraph(
 		}
 
 		
-		composable(Route.Seat.destination){
+//		composable(
+//			route = "${Route.Seat.destination}/{id}",
+//		){
+//			val movieId = it.arguments?.getInt("id")!!
+//			SeatScreen(movieId = movieId,
+//				modifier = modifier,
+//				assistedFactory = movieDetailAssistedFactory,)
+//		}
+		composable(
+			route = Route.Seat.destination
+		){
 			SeatSelectorScreen()
 		}
 
@@ -182,6 +198,27 @@ fun AppNavigationGraph(
 
 		composable(route = Route.PosterImage.destination) {
 			PosterScreen(sharedViewModel = sharedViewModel)
+		}
+
+		composable(
+			route = "${Route.MovieNowDetail.destination}/{id}",
+			arguments = listOf(
+				navArgument(name = "id") { type = NavType.IntType }
+			)
+		) {
+			val movieId = it.arguments?.getInt("id")!!
+			MovieNowDetailsScreen(
+				movieId = movieId,
+				modifier = modifier,
+				assistedFactory = movieDetailAssistedFactory,
+				showMoviePoster = { posterPath ->
+					sharedViewModel.putPosterPath(posterPath)
+					navHostController.navigate(Route.PosterImage.destination)
+				},
+				watchVideoPreview = { movieName ->
+					navHostController.navigate("${Route.MoviesPlayer.destination}/$movieName")
+				},
+				navController = navHostController)
 		}
 
 		composable(

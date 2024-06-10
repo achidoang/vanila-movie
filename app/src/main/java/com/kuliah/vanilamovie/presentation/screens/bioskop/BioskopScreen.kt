@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -37,141 +36,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.compose.itemContentType
 import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
-import com.kuliah.vanilamovie.presentation.common.PageIndicator
 import com.kuliah.vanilamovie.presentation.common.PageIndicatorBioskop
-import com.kuliah.vanilamovie.presentation.screens.search.components.SearchScreenMovieItem
 import com.kuliah.vanilamovie.presentation.theme.SeaGreen
 import com.kuliah.vanilamovie.presentation.theme.TomatoRed
 import com.kuliah.vanilamovie.presentation.theme.VanilaMovieTheme
 import com.kuliah.vanilamovie.util.formatDate
 import com.kuliah.vanilamovie.util.separateWithCommas
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.TextStyle
-import java.util.Calendar
 
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun BioskopScreen(
-	modifier: Modifier = Modifier,
-	onDateSelected: (String) -> Unit = {},
-	onTimeSelected: (String) -> Unit = {},
-	onBottomButtonClick: () -> Unit = {}
-) {
-	val today = remember { LocalDate.now() }
-	val dates = remember { (0..2).map { today.plusDays(it.toLong()) } }
 
-
-	val currentPage =
-		"Schedule" // Set the current page to "Shows" by default or based on your logic
-
-	Column(
-		modifier = modifier
-			.fillMaxSize()
-	) {
-		PageIndicatorBioskop(
-			currentPage = currentPage,
-			onIndicatorClick = {
-				// Handle page change if needed
-			},
-		)
-		Row(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(start = 16.dp, top = 10.dp)
-				.height(50.dp),
-			horizontalArrangement = Arrangement.SpaceBetween
-		) {
-			dates.forEach { date ->
-				Button(
-					onClick = { onDateSelected(date.toString()) },
-					modifier = Modifier.padding(end = 10.dp),
-					shape = RectangleShape // Mengatur bentuk button menjadi persegi panjang
-				) {
-					Column(
-						horizontalAlignment = Alignment.CenterHorizontally
-					) {
-						Text(
-							text = "${date.dayOfMonth}, ${date.month.name.take(3)}",
-							fontSize = 11.sp
-						)
-						Text(
-							text = "${date.dayOfWeek.name.take(3)}",
-							fontSize = 9.sp
-						)
-					}
-				}
-			}
-		}
-
-		Spacer(modifier = Modifier.height(20.dp))
-
-		Text(
-			text = "Solo Paragon XXI",
-			style = MaterialTheme.typography.titleMedium,
-			fontWeight = FontWeight.Bold,
-			modifier = Modifier
-				.padding(start = 16.dp)
-				.align(Alignment.Start)
-		)
-
-
-		val showTimes = listOf("10:00", "12:30", "15:00", "17:30", "20:00")
-
-		LazyHorizontalGrid(
-			rows = GridCells.Fixed(2),
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(start = 16.dp)
-				.height(110.dp),
-			horizontalArrangement = Arrangement.spacedBy(10.dp),
-			contentPadding = PaddingValues(top = 15.dp)
-		) {
-			items(showTimes) { time ->
-				Button(
-					onClick = { onTimeSelected(time) },
-					modifier = Modifier.padding(
-						end = 20.dp,
-						bottom = 10.dp
-					),
-					shape = RectangleShape // Mengatur bentuk button menjadi persegi panjang
-				) {
-					Text(text = time, textAlign = TextAlign.Center)
-				}
-			}
-		}
-
-		Spacer(modifier = Modifier.weight(1f))
-
-		Button(
-			onClick = { onBottomButtonClick() },
-			modifier = Modifier
-				.fillMaxWidth()
-				//				.padding(16.dp)
-				.height(56.dp),
-			shape = RectangleShape // Mengatur bentuk button menjadi persegi panjang
-		) {
-			Icon(
-				imageVector = Icons.Filled.MovieCreation,
-				contentDescription = "Check Icon",
-				modifier = Modifier.padding(end = 8.dp)
-			)
-			Text(text = "Confirm")
-		}
-	}
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -368,20 +253,31 @@ fun TimeComp(
 ){
 	val color = when {
 		isSelected -> Yellow
-		else -> Yellow.copy(alpha = 0.15f)
+		else -> MaterialTheme.colorScheme.background
 	}
+
+	val textBg = when {
+		isSelected -> Black
+		else -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
+	}
+
 
 	Surface(
 		modifier = Modifier
 			.wrapContentSize()
+			.width(50.dp)
+			.height(40.dp)
 			.clip(RoundedCornerShape(16.dp))
 			.clickable {
 				onClick(time)
 			}, shape = RoundedCornerShape(16.dp), color = color
 	) {
-		Text(text = time,
-			style = MaterialTheme.typography.labelSmall,
-			modifier = Modifier.padding(12.dp))
+			Text(
+				text = time,
+				style = MaterialTheme.typography.labelSmall,
+				color = textBg,
+				modifier = Modifier.padding(12.dp))
+
 
 	}
 }
@@ -395,18 +291,19 @@ fun DateComp(
 ) {
 	val color = when {
 		isSelected -> Yellow
-		else -> Yellow.copy(alpha = 0.15f)
+		else -> MaterialTheme.colorScheme.background
 	}
 
 	val textBg = when {
-		isSelected -> Color.White
-		else -> Color.Transparent
+		isSelected -> Black
+		else -> MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
 	}
 
 	Surface(
 		modifier = Modifier
 			.wrapContentSize()
 			.clip(RoundedCornerShape(16.dp))
+			.width(75.dp)
 			.clickable {
 				onClick(date)
 			}, shape = RoundedCornerShape(16.dp), color = color
@@ -416,22 +313,30 @@ fun DateComp(
 			horizontalAlignment = Alignment.CenterHorizontally,
 			verticalArrangement = Arrangement.spacedBy(8.dp)
 		) {
-			Text(
-				text = date.month.getDisplayName(TextStyle.SHORT, java.util.Locale.getDefault()),
-				style = MaterialTheme.typography.labelSmall
-			)
-
-			Box(
-				modifier = Modifier
-					.clip(CircleShape)
-					.background(textBg)
-					.padding(4.dp)
-			) {
+			Column {
+				Text(
+					text = date.month.getDisplayName(
+						TextStyle.SHORT,
+						java.util.Locale.getDefault()
+					),
+					style = MaterialTheme.typography.labelSmall,
+					color = textBg
+				)
 				Text(
 					text = date.dayOfMonth.toString(),
-					style = MaterialTheme.typography.labelSmall
+					style = MaterialTheme.typography.labelSmall,
+					color = textBg,
+					textAlign = TextAlign.Center
 				)
+
 			}
+//			Box(
+//				modifier = Modifier
+//					.clip(RoundedCornerShape(16.dp))
+//					.background(textBg)
+//					.padding(6.dp)
+//			) {
+//			}
 		}
 	}
 }
@@ -441,14 +346,6 @@ fun DateComp(
 @Composable
 fun BioskopScreenPreview() {
 	VanilaMovieTheme {
-		BioskopScreen(
-			onDateSelected = { selectedDate ->
-				println("Selected date: $selectedDate")
-			},
-			onTimeSelected = { selectedTime ->
-				println("Selected time: $selectedTime")
-			}
-		)
 
 	}
 }

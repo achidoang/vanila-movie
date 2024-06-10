@@ -60,7 +60,6 @@ import com.kuliah.vanilamovie.domain.model.valueObjects.Country
 import com.kuliah.vanilamovie.domain.model.valueObjects.Genre
 import com.kuliah.vanilamovie.presentation.common.DataDetailMovie
 import com.kuliah.vanilamovie.presentation.navigation.Route
-import com.kuliah.vanilamovie.presentation.screens.bioskop.BioskopScreen
 import com.kuliah.vanilamovie.presentation.screens.bioskop.DateComp
 import com.kuliah.vanilamovie.presentation.screens.bioskop.DetailDataMovie
 import com.kuliah.vanilamovie.presentation.screens.bioskop.TimeComp
@@ -142,9 +141,6 @@ fun MovieDetails(
 				}
 
 				DataDetailMovie1(onPlayButtonClick = onPlayButtonClick, movie = movie)
-
-
-
 			}
 		}
 		Spacer(modifier = Modifier.height(5.dp))
@@ -152,10 +148,85 @@ fun MovieDetails(
 		Divider()
 		DataDetailMovie(movie = movie)
 
+	}
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun MovieNowDetails(
+	movie: MovieDetail,
+	showMoviePoster: (String) -> Unit,
+	onPlayButtonClick: (String) -> Unit,
+	navController: NavHostController
+) {
+
+
+	val scrollState = rememberScrollState()
+
+	Column(
+		modifier = Modifier
+			.fillMaxWidth()
+			.verticalScroll(scrollState)
+	) {
+
+		Box(
+			modifier = Modifier
+				.fillMaxWidth()
+				.wrapContentHeight()
+		) {
+			AsyncImage(
+				model = displayOriginalImage(movie.backdropPath),
+				contentDescription = "backdrop_image",
+				modifier = Modifier
+					.align(Alignment.TopStart)
+					.fillMaxWidth()
+					.height(180.dp)
+					.background(MidnightBlack),
+				contentScale = ContentScale.Crop
+			)
+
+			Row(
+				modifier = Modifier
+					.padding(top = 150.dp, start = 8.dp, end = 8.dp)
+					.fillMaxWidth()
+					.height(250.dp),
+				verticalAlignment = Alignment.Top,
+				horizontalArrangement = Arrangement.Start
+			) {
+				Card(
+					onClick = {
+						movie.posterPath?.let { posterPath ->
+							showMoviePoster(posterPath)
+						}
+					},
+					modifier = Modifier
+						.padding(start = 10.dp, end = 20.dp)
+						.width(110.dp)
+						.height(180.dp)
+						.clip(RoundedCornerShape(8.dp)),
+				) {
+					AsyncImage(
+						modifier = Modifier.background(Color.DarkGray),
+						model = displayPosterImage(movie.posterPath),
+						contentDescription = "Poster Image",
+						contentScale = ContentScale.Crop,
+					)
+				}
+
+				DataDetailMovie1(onPlayButtonClick = onPlayButtonClick, movie = movie)
+
+			}
+		}
+		Spacer(modifier = Modifier.height(5.dp))
+
+		Divider()
+		DataDetailMovie(movie = movie)
 		Button(
 			onClick = { navController.navigate(Route.Seat.destination)},
 			modifier = Modifier
 				.fillMaxWidth()
+				.background(Color(0xFF1A2C50))
 				//				.padding(16.dp)
 				.height(56.dp),
 			shape = RectangleShape // Mengatur bentuk button menjadi persegi panjang
@@ -167,52 +238,6 @@ fun MovieDetails(
 			)
 			Text(text = "Buy Ticket")
 		}
-//		HorizontalPager(
-//			state = pagerState,
-//			count = 2,
-//			modifier = Modifier
-//				.fillMaxSize()
-//				.height(450.dp)
-////				.weight(1f)
-//		) { page ->
-//			when (page) {
-//				0 ->
-//					DetailDataMovie(movie = movie)
-//
-//				1 -> Column(
-//					modifier = Modifier.padding(bottom = 20.dp)
-//
-//				) {
-//					Row(
-//						modifier = Modifier.horizontalScroll(dateScrollState),
-//						horizontalArrangement = Arrangement.spacedBy(8.dp)
-//					) {
-//						for (i in 0..14) {
-//							val date = today.plusDays(i.toLong())
-//							DateComp(
-//								date = date, isSelected = selectedData.value == date
-//							) {
-//								selectedData.value = it
-//							}
-//						}
-//					}
-//
-//					Row(
-//						modifier = Modifier.horizontalScroll(timeScrollState),
-//						horizontalArrangement = Arrangement.spacedBy(8.dp)
-//					) {
-//						for (i in 0..22 step 2) {
-//							val time = "$i:00"
-//							TimeComp(
-//								time = time, isSelected = selectedTime.value == time
-//							) {
-//								selectedTime.value = it
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
 	}
 }
 

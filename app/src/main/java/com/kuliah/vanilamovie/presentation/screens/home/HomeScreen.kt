@@ -38,6 +38,7 @@ import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenView
 fun HomeScreen(
 	modifier: Modifier,
 	showMovieDetail: (Int) -> Unit,
+	showMovieNowDetail: (Int) -> Unit,
 	navController: NavHostController,
 	darkTheme: Boolean,
 ) {
@@ -85,9 +86,12 @@ fun HomeScreen(
 			MoviesSectionNow(
 				movies = nowPlayingMovies,
 				sectionTitle = "Now Playing",
-				onMovieClick = { movieId ->
-					// Navigasi ke detail film tertentu
-					navController.navigate("${Route.MovieDetail.destination}/$movieId")
+				onMovieClick = {
+					showMovieNowDetail(it)
+
+//					movieId ->
+//					// Navigasi ke detail film tertentu
+//					navController.navigate("${Route.MovieDetail.destination}/$movieId")
 				},
 				navController = navController // Pastikan untuk meneruskan NavController
 			)
