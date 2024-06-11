@@ -12,6 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
 import com.kuliah.vanilamovie.presentation.screens.detail.MovieDetailScreen
 import com.kuliah.vanilamovie.presentation.screens.detail.MovieNowDetailsScreen
 import com.kuliah.vanilamovie.presentation.screens.detail.MovieNowScreen
@@ -26,11 +27,9 @@ import com.kuliah.vanilamovie.presentation.screens.search.MoviesSearchResultScre
 import com.kuliah.vanilamovie.presentation.screens.search.SearchPager
 import com.kuliah.vanilamovie.presentation.screens.search.SearchScreen
 import com.kuliah.vanilamovie.presentation.screens.search.ShowsSearchResultScreen
-import com.kuliah.vanilamovie.presentation.screens.seat.SeatScreen
 import com.kuliah.vanilamovie.presentation.screens.seat.SeatSelectorScreen
 import com.kuliah.vanilamovie.presentation.screens.shows.ShowsScreen
 import com.kuliah.vanilamovie.presentation.screens.ticket.TicketScreen
-import com.kuliah.vanilamovie.presentation.viewModel.SeatScreenViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.genres.GenresMovieResultViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.genres.GenresShowsResultViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelAssistedFactory
@@ -85,23 +84,41 @@ fun AppNavigationGraph(
 			} )
 		}
 
-		composable(Route.Ticket.destination){
-			TicketScreen()
+		composable(
+			route = "${Route.Ticket.destination}/{movieTitle}/{selectedSeats}/{totalPrice}/{selectedTime}/{selectedDate}",
+			arguments = listOf(
+				navArgument("movieTitle") { type = NavType.StringType },
+				navArgument("selectedSeats") { type = NavType.StringType },
+				navArgument("totalPrice") { type = NavType.IntType },
+				navArgument("selectedTime") { type = NavType.StringType },
+				navArgument("selectedDate") { type = NavType.StringType }
+			)
+		) { backStackEntry ->
+			val movieTitle = backStackEntry.arguments?.getString("movieTitle") ?: ""
+			val selectedSeats = backStackEntry.arguments?.getString("selectedSeats") ?: ""
+			val totalPrice = backStackEntry.arguments?.getInt("totalPrice") ?: 0
+			val selectedTime = backStackEntry.arguments?.getString("selectedTime") ?: ""
+			val selectedDate = backStackEntry.arguments?.getString("selectedDate") ?: ""
+
+			TicketScreen(
+				movieTitle = movieTitle,
+				selectedSeats = selectedSeats,
+				totalPrice = totalPrice,
+				selectedTime = selectedTime,
+				selectedDate = selectedDate,
+				navController = navHostController
+			)
 		}
 
-		
-//		composable(
-//			route = "${Route.Seat.destination}/{id}",
-//		){
-//			val movieId = it.arguments?.getInt("id")!!
-//			SeatScreen(movieId = movieId,
-//				modifier = modifier,
-//				assistedFactory = movieDetailAssistedFactory,)
-//		}
+
 		composable(
-			route = Route.Seat.destination
-		){
-			SeatSelectorScreen()
+			route = "${Route.Seat.destination}/{movieTitle}",
+			arguments = listOf(
+				navArgument(name = "movieTitle") { type = NavType.StringType }
+			)
+		) {
+			val movieTitle = it.arguments?.getString("movieTitle")!!
+			SeatSelectorScreen(navController = navHostController,movieTitle = movieTitle)
 		}
 
 		composable(route = Route.Search.destination) {

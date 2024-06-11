@@ -11,10 +11,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kuliah.vanilamovie.presentation.navigation.BottomBarItem
+import com.kuliah.vanilamovie.presentation.viewModel.ticket.TicketViewModel
 
 @Composable
 fun AppBottomBar(
-	navController: NavHostController
+	navController: NavHostController,
 ) {
 
 	val navBackStackEntry by navController.currentBackStackEntryAsState()

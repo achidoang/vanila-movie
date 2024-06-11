@@ -44,12 +44,16 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
+import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.screens.bioskop.DateComp
 import com.kuliah.vanilamovie.presentation.screens.bioskop.TimeComp
 import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModel
 import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelFactory
+import com.kuliah.vanilamovie.presentation.viewModel.ticket.TicketViewModel
+import com.kuliah.vanilamovie.util.formatRupiah
 import java.time.LocalDate
 
 
@@ -57,11 +61,9 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SeatSelectorScreen(
-//	movie: MovieDetail,
+	navController: NavHostController,
+	movieTitle: String
 ) {
-
-
-
 	val today = LocalDate.now()
 	val dateScrollState = rememberScrollState()
 	val timeScrollState = rememberScrollState()
@@ -86,6 +88,8 @@ fun SeatSelectorScreen(
 		mutableStateOf(false)
 	}
 
+	val pricePerSeat = 30000
+	val totalPrice = selectedSeat.size * pricePerSeat
 
 	Scaffold(
 		//		backgroundColor = LightGreen
@@ -281,15 +285,17 @@ fun SeatSelectorScreen(
 								title = { Text(text = "Konfirmasi") },
 								text = {
 									Column {
-//										Text(text = "Title : " + movie.title)
-										Text(text = "Price  : Rp " + "${selectedSeat.size * 30000}")
+										Text(text = "Title: $movieTitle")
+										Text(text = "Price  : " + formatRupiah(totalPrice))
 										Text(text = "Time : ${selectedTime.value ?: "Belum dipilih"}")
 										Text(text = "Date : ${selectedDate.value ?: "Belum dipilih"}")
 										Text(
 											text = if (selectedSeat.isEmpty()) {
 												"Seats : Anda Belum memilih Kursi"
 											} else {
-												"Seats : ${selectedSeat.sorted().joinToString(", ")}"
+												"Seats : ${
+													selectedSeat.sorted().joinToString(", ")
+												}"
 											}
 										)
 										Spacer(modifier = Modifier.height(20.dp))
@@ -298,7 +304,14 @@ fun SeatSelectorScreen(
 								},
 								confirmButton = {
 									Button(
-										onClick = { showDialog = false }
+										onClick = {
+											showDialog = false
+											navController.navigate(
+												"${Route.Ticket.destination}/$movieTitle/${
+													selectedSeat.sorted().joinToString(", ")
+												}/$totalPrice/${selectedTime.value}/${selectedDate.value}"
+											)
+										}
 									) {
 										Text("Ya")
 									}

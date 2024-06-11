@@ -41,3 +41,9 @@ fun formatDate(releaseDate: String): String {
 	val date = LocalDate.parse(releaseDate, inputFormatter)
 	return outputFormatter.format(date)
 }
+
+fun formatRupiah(amount: Int): String {
+	val localeID = Locale("in", "ID")
+	val numberFormat = NumberFormat.getCurrencyInstance(localeID)
+	return numberFormat.format(amount)
+}

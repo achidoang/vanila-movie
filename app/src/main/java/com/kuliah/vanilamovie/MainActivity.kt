@@ -38,6 +38,7 @@ import com.kuliah.vanilamovie.presentation.viewModel.player.PlayerScreenViewMode
 import com.kuliah.vanilamovie.presentation.viewModel.share.SharedViewModel
 import com.kuliah.vanilamovie.presentation.viewModel.shows.ShowDetailScreenViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.shows.ShowsSearchResultScreenViewModelAssistedFactory
+import com.kuliah.vanilamovie.presentation.viewModel.ticket.TicketViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -65,6 +66,7 @@ import javax.inject.Inject
 
 	 @Inject
 	 lateinit var showsResultAssistedFactory: GenresShowsResultViewModelAssistedFactory
+
 
 	 @RequiresApi(Build.VERSION_CODES.O)
 	 override fun onCreate(savedInstanceState: Bundle?) {
