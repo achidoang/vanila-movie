@@ -68,10 +68,15 @@ import javax.inject.Inject
 	 lateinit var showsResultAssistedFactory: GenresShowsResultViewModelAssistedFactory
 
 
+	 private lateinit var ticketViewModel: TicketViewModel
+
 	 @RequiresApi(Build.VERSION_CODES.O)
 	 override fun onCreate(savedInstanceState: Bundle?) {
 		 super.onCreate(savedInstanceState)
 		 installSplashScreen()
+
+		 ticketViewModel = TicketViewModel()
+
 		 setContent {
 			 val homeScreenViewModel: HomeScreenViewModel = hiltViewModel()
 			 val themeMode = homeScreenViewModel.themeMode.collectAsState().value
@@ -97,7 +102,8 @@ import javax.inject.Inject
 					 color = MaterialTheme.colorScheme.background
 				 ) {
 					 MainScreen(
-						 darkTheme = themeMode
+						 darkTheme = themeMode,
+						 ticketViewModel = ticketViewModel
 					 )
 				 }
 			 }
@@ -108,7 +114,8 @@ import javax.inject.Inject
 	 @OptIn(ExperimentalMaterial3Api::class)
 	 @Composable
 	 fun MainScreen(
-		 darkTheme: Boolean
+		 darkTheme: Boolean,
+		 ticketViewModel: TicketViewModel
 	 ) {
 		 val navController = rememberNavController()
 		 val sharedViewModel: SharedViewModel = viewModel()
@@ -126,6 +133,7 @@ import javax.inject.Inject
 				 moviesPlayerAssistedFactory = moviesPlayerAssistedFactory,
 				 sharedViewModel = sharedViewModel,
 				 darkTheme = darkTheme,
+				 ticketViewModel = ticketViewModel,
 				 showsGenresAssistedFactory = showsResultAssistedFactory
 			 )
 		 }

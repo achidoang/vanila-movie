@@ -1,68 +1,147 @@
 package com.kuliah.vanilamovie.presentation.screens.ticket
 
+
+import android.content.Context
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TopAppBar
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.kuliah.vanilamovie.domain.model.ticket.Ticket
 import com.kuliah.vanilamovie.presentation.navigation.Route
+import com.kuliah.vanilamovie.presentation.viewModel.ticket.TicketViewModel
+import com.kuliah.vanilamovie.util.formatRupiah
+import com.kuliah.vanilamovie.util.loadTicketsFromSharedPreferences
 
 @Composable
-fun TicketScreen(
-	movieTitle: String?,
-	selectedSeats: String?,
-	totalPrice: Int?,
-	selectedTime: String?,
-	selectedDate: String?,
-	navController: NavHostController
-) {
-	if (movieTitle == null || selectedSeats == null || totalPrice == null || selectedTime == null || selectedDate == null) {
-		// Tampilkan pesan kesalahan atau arahkan ke layar yang sesuai
-		Column(
-			modifier = Modifier
-				.fillMaxSize()
-				.padding(16.dp),
-			verticalArrangement = Arrangement.Center,
-			horizontalAlignment = Alignment.CenterHorizontally
-		) {
-			Text("No ticket data available. Please complete the checkout process.")
-			Spacer(modifier = Modifier.height(20.dp))
-			Button(onClick = { navController.navigate(Route.Home.destination) }) {
-				Text("Go to Home")
-			}
-		}
-	} else {
-		// Tampilkan informasi tiket
-		Scaffold(
-			topBar = {
-				TopAppBar(title = { Text("Ticket") })
-			}
-		) { padding ->
-			Column(
-				modifier = Modifier
-					.padding(padding)
-					.fillMaxSize()
-					.padding(16.dp),
-				verticalArrangement = Arrangement.Center,
-				horizontalAlignment = Alignment.CenterHorizontally
-			) {
-				Text("Movie Title: $movieTitle", style = MaterialTheme.typography.h6)
-				Text("Seats: $selectedSeats", style = MaterialTheme.typography.body1)
-				Text("Price: Rp $totalPrice", style = MaterialTheme.typography.body1)
-				Text("Time: $selectedTime", style = MaterialTheme.typography.body1)
-				Text("Date: $selectedDate", style = MaterialTheme.typography.body1)
+fun TicketScreen(ticketViewModel: TicketViewModel, navController: NavController, context: Context) {
+	val savedTickets = loadTicketsFromSharedPreferences(context)
+	val ticketState by ticketViewModel.ticketState.collectAsState()
+
+	// Update the ticket state to include saved tickets without duplication
+	LaunchedEffect(savedTickets) {
+		savedTickets.forEach { savedTicket ->
+			if (!ticketState.any { it == savedTicket }) {
+				ticketViewModel.addTicket(savedTicket)
 			}
 		}
 	}
+
+	// Navigate back to the home screen when back button is pressed
+	BackHandler {
+		navController.navigate(Route.Home.destination) {
+			popUpTo(Route.Home.destination) { inclusive = true }
+		}
+	}
+
+	Scaffold(
+//		topBar = {
+//			TopAppBar(
+//				title = { Text(text = "My Tickets", style = MaterialTheme.typography.titleSmall) },
+//				backgroundColor = Color(0xFF1A2C50),
+//				contentColor = Color.White
+//			)
+//		},
+		content = { it
+			if (ticketState.isEmpty()) {
+				Box(
+					modifier = Modifier.fillMaxSize(),
+					contentAlignment = Alignment.Center
+				) {
+					Text(
+						text = "No tickets available",
+						style = MaterialTheme.typography.bodyLarge,
+						color = Color.DarkGray
+					)
+				}
+			} else {
+				LazyColumn(
+					modifier = Modifier.padding(horizontal = 16.dp),
+					contentPadding = PaddingValues(top = 16.dp, bottom = 80.dp)
+				) {
+					items(ticketState) { ticket ->
+						TicketItem(ticket)
+						Spacer(modifier = Modifier.height(16.dp))
+					}
+				}
+			}
+		}
+	)
+
 }
+
+
+
+
+@Composable
+fun TicketItem(ticket: Ticket) {
+	Card(
+		modifier = Modifier
+			.fillMaxWidth()
+			.clip(shape = RoundedCornerShape(16.dp))
+			.clickable { /* Handle click event */ },
+//		elevation = 8.dp,
+		shape = RoundedCornerShape(16.dp),
+
+	) {
+		Column(
+			modifier = Modifier.padding(16.dp),
+			verticalArrangement = Arrangement.spacedBy(8.dp)
+		) {
+
+			Text(
+				text = ticket.movieTitle,
+				style = MaterialTheme.typography.titleMedium,
+				color = Color.Black
+			)
+			Text(
+				text = "Price: ${formatRupiah(ticket.price)}",
+				style = MaterialTheme.typography.labelMedium,
+				color = Color.Black
+			)
+			Text(
+				text = "Time: ${ticket.time}",
+				style = MaterialTheme.typography.labelSmall,
+				color = Color.Black
+			)
+			Text(
+				text = "Date: ${ticket.date}",
+				style = MaterialTheme.typography.bodySmall,
+				color = Color.Black
+			)
+			Text(
+				text = "Seats: ${ticket.seats.joinToString(", ")}",
+				style = MaterialTheme.typography.bodySmall,
+				color = Color.Black
+			)
+		}
+	}
+}
+

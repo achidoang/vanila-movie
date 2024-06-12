@@ -1,5 +1,6 @@
 package com.kuliah.vanilamovie.presentation.screens.seat
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -40,12 +41,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.kuliah.vanilamovie.domain.model.movie.MovieDetail
+import com.kuliah.vanilamovie.domain.model.ticket.Ticket
 import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.screens.bioskop.DateComp
 import com.kuliah.vanilamovie.presentation.screens.bioskop.TimeComp
@@ -54,7 +58,9 @@ import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenView
 import com.kuliah.vanilamovie.presentation.viewModel.movie.MovieDetailScreenViewModelFactory
 import com.kuliah.vanilamovie.presentation.viewModel.ticket.TicketViewModel
 import com.kuliah.vanilamovie.util.formatRupiah
+import com.kuliah.vanilamovie.util.saveTicketsToSharedPreferences
 import java.time.LocalDate
+import java.util.UUID
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,8 +68,15 @@ import java.time.LocalDate
 @Composable
 fun SeatSelectorScreen(
 	navController: NavHostController,
-	movieTitle: String
+	movieTitle: String,
+	ticketViewModel: TicketViewModel,
+	context: Context
 ) {
+
+	// Define data structure to store ticket reservations
+	val tickets = ticketViewModel.ticketState.collectAsState().value
+
+
 	val today = LocalDate.now()
 	val dateScrollState = rememberScrollState()
 	val timeScrollState = rememberScrollState()
@@ -88,11 +101,14 @@ fun SeatSelectorScreen(
 		mutableStateOf(false)
 	}
 
+	var showSeatNotAvailableAlert by remember {
+		mutableStateOf(false)
+	}
+
 	val pricePerSeat = 30000
 	val totalPrice = selectedSeat.size * pricePerSeat
 
 	Scaffold(
-		//		backgroundColor = LightGreen
 	) { padding ->
 		Column(
 			modifier = Modifier
@@ -265,7 +281,22 @@ fun SeatSelectorScreen(
 								if (selectedSeat.isEmpty() || selectedTime.value.isNullOrEmpty() || selectedDate.value == null) {
 									showIncompleteSelectionAlert = true
 								} else {
-									showDialog = true
+									// Check if the selected seats are available
+									val selectedSeatsAvailable = selectedSeat.all { seat ->
+										tickets.none {
+											it.date == selectedDate.value.toString() &&
+													it.time == selectedTime.value!! &&
+													it.movieTitle == movieTitle &&
+													it.seats.contains(seat)
+										}
+									}
+									if (selectedSeatsAvailable) {
+										// If seats are available, proceed with checkout
+										showDialog = true
+									} else {
+										// If seats are not available, show a message
+										showSeatNotAvailableAlert = true
+									}
 								}
 							},
 							modifier = Modifier
@@ -279,6 +310,22 @@ fun SeatSelectorScreen(
 							Text(text = "Check Out", color = Black)
 						}
 
+						// Dialog to show when selected seats are not available
+						if (showSeatNotAvailableAlert) {
+							AlertDialog(
+								onDismissRequest = { showSeatNotAvailableAlert = false },
+								title = { Text(text = "Perhatian") },
+								text = { Text("Kursi yang Anda pilih sudah tidak tersedia. Silakan pilih kursi lain.") },
+								confirmButton = {
+									Button(
+										onClick = { showSeatNotAvailableAlert = false }
+									) {
+										Text("OK")
+									}
+								}
+							)
+						}
+
 						if (showDialog) {
 							AlertDialog(
 								onDismissRequest = { showDialog = false },
@@ -286,16 +333,14 @@ fun SeatSelectorScreen(
 								text = {
 									Column {
 										Text(text = "Title: $movieTitle")
-										Text(text = "Price  : " + formatRupiah(totalPrice))
-										Text(text = "Time : ${selectedTime.value ?: "Belum dipilih"}")
-										Text(text = "Date : ${selectedDate.value ?: "Belum dipilih"}")
+										Text(text = "Price: " + formatRupiah(totalPrice))
+										Text(text = "Time: ${selectedTime.value ?: "Belum dipilih"}")
+										Text(text = "Date: ${selectedDate.value ?: "Belum dipilih"}")
 										Text(
 											text = if (selectedSeat.isEmpty()) {
-												"Seats : Anda Belum memilih Kursi"
+												"Seats: Anda Belum memilih Kursi"
 											} else {
-												"Seats : ${
-													selectedSeat.sorted().joinToString(", ")
-												}"
+												"Seats: ${selectedSeat.sorted().joinToString(", ")}"
 											}
 										)
 										Spacer(modifier = Modifier.height(20.dp))
@@ -306,11 +351,20 @@ fun SeatSelectorScreen(
 									Button(
 										onClick = {
 											showDialog = false
-											navController.navigate(
-												"${Route.Ticket.destination}/$movieTitle/${
-													selectedSeat.sorted().joinToString(", ")
-												}/$totalPrice/${selectedTime.value}/${selectedDate.value}"
+											val ticket = Ticket(
+//												id = UUID.randomUUID().toString(),
+												movieTitle = movieTitle,
+												price = totalPrice,
+												time = selectedTime.value!!,
+												date = selectedDate.value.toString(),
+												seats = selectedSeat.toList()
 											)
+											ticketViewModel.addTicket(ticket)
+
+											// Save all tickets to SharedPreferences
+											saveTicketsToSharedPreferences(context, ticketViewModel.ticketState.value)
+
+											navController.navigate(Route.Ticket.destination)
 										}
 									) {
 										Text("Ya")
@@ -354,29 +408,33 @@ fun SeatSelectorScreen(
 fun SeatComp(
 	isEnabled: Boolean = false,
 	isSelected: Boolean = false,
+	isCheckedOut: Boolean = false,
 	seatNumber: String = "",
 	onClick: (Boolean, String) -> Unit = { _, _ -> },
 ) {
 	val seatColor = when {
-		!isEnabled -> Color.Gray
+		!isEnabled -> Gray
 		isSelected -> Yellow
-		else -> Color.White
+		isCheckedOut -> Gray
+		else -> White
 	}
 
 	val textColor = when {
-		isSelected -> Color.DarkGray
+		isSelected -> DarkGray
 		else -> Black
 	}
 
-	Box(modifier = Modifier
-		.size(32.dp)
-		.border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
-		.clip(RoundedCornerShape(8.dp))
-		.background(color = seatColor)
-		.clickable {
-			onClick(isSelected, seatNumber);
-		}
-		.padding(8.dp), contentAlignment = Alignment.Center) {
+	Box(
+		modifier = Modifier
+			.size(32.dp)
+			.border(width = 1.dp, color = Gray, shape = RoundedCornerShape(8.dp))
+			.clip(RoundedCornerShape(8.dp))
+			.background(color = seatColor)
+			.let { if (isEnabled && !isCheckedOut) it.clickable { onClick(isSelected, seatNumber) } else it }
+			//			.clickable { onClick(isSelected, seatNumber) }
+			.padding(8.dp),
+		contentAlignment = Alignment.Center
+	) {
 		Text(
 			seatNumber,
 			style = MaterialTheme.typography.labelSmall.copy(color = textColor),

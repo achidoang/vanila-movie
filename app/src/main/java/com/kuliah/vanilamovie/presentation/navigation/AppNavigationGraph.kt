@@ -6,6 +6,8 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -38,6 +40,7 @@ import com.kuliah.vanilamovie.presentation.viewModel.player.PlayerScreenViewMode
 import com.kuliah.vanilamovie.presentation.viewModel.share.SharedViewModel
 import com.kuliah.vanilamovie.presentation.viewModel.shows.ShowDetailScreenViewModelAssistedFactory
 import com.kuliah.vanilamovie.presentation.viewModel.shows.ShowsSearchResultScreenViewModelAssistedFactory
+import com.kuliah.vanilamovie.presentation.viewModel.ticket.TicketViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(UnstableApi::class)
@@ -53,6 +56,7 @@ fun AppNavigationGraph(
 	moviesPlayerAssistedFactory: PlayerScreenViewModel.PlayerViewModelAssistedFactory,
 	modifier: Modifier,
 	sharedViewModel: SharedViewModel,
+	ticketViewModel: TicketViewModel,
 	darkTheme: Boolean
 ) {
 	NavHost(
@@ -78,38 +82,18 @@ fun AppNavigationGraph(
 			ProfileScreen()
 		}
 
-		composable(Route.MovieNow.destination){
+		composable(Route.MovieNow.destination) {
 			MovieNowScreen(modifier = modifier, showMovieDetail = {
 				navHostController.navigate("${Route.MovieNowDetail.destination}/$it")
-			} )
+			})
 		}
 
 		composable(
-			route = "${Route.Ticket.destination}/{movieTitle}/{selectedSeats}/{totalPrice}/{selectedTime}/{selectedDate}",
-			arguments = listOf(
-				navArgument("movieTitle") { type = NavType.StringType },
-				navArgument("selectedSeats") { type = NavType.StringType },
-				navArgument("totalPrice") { type = NavType.IntType },
-				navArgument("selectedTime") { type = NavType.StringType },
-				navArgument("selectedDate") { type = NavType.StringType }
-			)
-		) { backStackEntry ->
-			val movieTitle = backStackEntry.arguments?.getString("movieTitle") ?: ""
-			val selectedSeats = backStackEntry.arguments?.getString("selectedSeats") ?: ""
-			val totalPrice = backStackEntry.arguments?.getInt("totalPrice") ?: 0
-			val selectedTime = backStackEntry.arguments?.getString("selectedTime") ?: ""
-			val selectedDate = backStackEntry.arguments?.getString("selectedDate") ?: ""
-
-			TicketScreen(
-				movieTitle = movieTitle,
-				selectedSeats = selectedSeats,
-				totalPrice = totalPrice,
-				selectedTime = selectedTime,
-				selectedDate = selectedDate,
-				navController = navHostController
-			)
+			route = Route.Ticket.destination
+		) {
+			val context = LocalContext.current
+			TicketScreen(ticketViewModel = ticketViewModel, navController = navHostController, context = context)
 		}
-
 
 		composable(
 			route = "${Route.Seat.destination}/{movieTitle}",
@@ -118,15 +102,35 @@ fun AppNavigationGraph(
 			)
 		) {
 			val movieTitle = it.arguments?.getString("movieTitle")!!
-			SeatSelectorScreen(navController = navHostController,movieTitle = movieTitle)
+			val context = LocalContext.current
+			SeatSelectorScreen(
+				navController = navHostController,
+				movieTitle = movieTitle,
+				context = context,
+				ticketViewModel = ticketViewModel // Operkan TicketViewModel ke SeatSelectorScreen
+			)
 		}
 
+//		composable(
+//			route = "${Route.Seat.destination}/{movieTitle}",
+//			arguments = listOf(
+//				navArgument(name = "movieTitle") { type = NavType.StringType }
+//			)
+//		) {
+//			val movieTitle = it.arguments?.getString("movieTitle")!!
+//			SeatSelectorScreen(navController = navHostController, movieTitle = movieTitle)
+//		}
+
 		composable(route = Route.Search.destination) {
-			SearchScreen(modifier = modifier, searchMovies = {
-				navHostController.navigate("${Route.SearchMovies.destination}/$it")
-			}, showMovieDetail = {
-				navHostController.navigate("${Route.MovieDetail.destination}/$it")
-			}, fetchMoviesByGenre = {navHostController.navigate("${Route.MoviesGenreResult.destination}/$it")})
+			SearchScreen(
+				modifier = modifier,
+				searchMovies = {
+					navHostController.navigate("${Route.SearchMovies.destination}/$it")
+				},
+				showMovieDetail = {
+					navHostController.navigate("${Route.MovieDetail.destination}/$it")
+				},
+				fetchMoviesByGenre = { navHostController.navigate("${Route.MoviesGenreResult.destination}/$it") })
 		}
 
 		composable(
@@ -150,23 +154,27 @@ fun AppNavigationGraph(
 		}
 
 		composable(route = Route.Shows.destination) {
-			ShowsScreen(modifier = modifier, searchShows = {
-				navHostController.navigate("${Route.SearchShows.destination}/$it")
-			}, showDetails = { showId ->
-				navHostController.navigate("${Route.ShowDetail.destination}/$showId")
-			}, fetchShowsByGenre = {navHostController.navigate("${Route.ShowsGenreResult.destination}/$it")})
+			ShowsScreen(
+				modifier = modifier,
+				searchShows = {
+					navHostController.navigate("${Route.SearchShows.destination}/$it")
+				},
+				showDetails = { showId ->
+					navHostController.navigate("${Route.ShowDetail.destination}/$showId")
+				},
+				fetchShowsByGenre = { navHostController.navigate("${Route.ShowsGenreResult.destination}/$it") })
 		}
 
 		composable(route = Route.Pager.destination) {
 			SearchPager(
 				searchMovies = { navHostController.navigate("${Route.SearchMovies.destination}/$it") },
 				showMovieDetail = { navHostController.navigate("${Route.MovieDetail.destination}/$it") },
-				searchShows = {navHostController.navigate("${Route.SearchShows.destination}/$it")},
+				searchShows = { navHostController.navigate("${Route.SearchShows.destination}/$it") },
 				showDetails = { showId ->
 					navHostController.navigate("${Route.ShowDetail.destination}/$showId")
 				},
-				fetchMoviesByGenre = {navHostController.navigate("${Route.MoviesGenreResult.destination}/$it")},
-				fetchShowsByGenre = {navHostController.navigate("${Route.ShowsGenreResult.destination}/$it")}
+				fetchMoviesByGenre = { navHostController.navigate("${Route.MoviesGenreResult.destination}/$it") },
+				fetchShowsByGenre = { navHostController.navigate("${Route.ShowsGenreResult.destination}/$it") }
 			)
 		}
 
@@ -235,7 +243,8 @@ fun AppNavigationGraph(
 				watchVideoPreview = { movieName ->
 					navHostController.navigate("${Route.MoviesPlayer.destination}/$movieName")
 				},
-				navController = navHostController)
+				navController = navHostController
+			)
 		}
 
 		composable(
@@ -256,7 +265,8 @@ fun AppNavigationGraph(
 				watchVideoPreview = { movieName ->
 					navHostController.navigate("${Route.MoviesPlayer.destination}/$movieName")
 				},
-				navController = navHostController)
+				navController = navHostController
+			)
 		}
 
 		composable(

@@ -11,6 +11,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.kuliah.vanilamovie.presentation.navigation.BottomBarItem
+import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.viewModel.ticket.TicketViewModel
 
 @Composable
@@ -21,8 +22,8 @@ fun AppBottomBar(
 	val navBackStackEntry by navController.currentBackStackEntryAsState()
 	val currentDestination = navBackStackEntry?.destination
 
-	if ( BottomBarItem().getBottomNavigationItems().any { it.route == currentDestination?.route } ) {
-		NavigationBar{
+	if (BottomBarItem().getBottomNavigationItems().any { it.route == currentDestination?.route }) {
+		NavigationBar {
 			BottomBarItem().getBottomNavigationItems().forEachIndexed { index, item ->
 				//iterating all items with their respective indexes
 				NavigationBarItem(
@@ -35,9 +36,16 @@ fun AppBottomBar(
 						)
 					},
 					onClick = {
-						navController.navigate( item.route ) {
-							popUpTo(navController.graph.findStartDestination().id){ saveState =  true }
+						navController.navigate(item.route) {
+							popUpTo(navController.graph.findStartDestination().id) {
+								saveState = true
+							}
+							// Modifikasi ini akan menghapus TicketScreen dari tumpukan kembali setelah checkout
+							popUpTo(Route.Home.destination) {
+								inclusive = false
+							}
 							launchSingleTop = true
+
 							restoreState = true
 						}
 					}
