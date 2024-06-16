@@ -1,7 +1,5 @@
 package com.kuliah.vanilamovie.data.remote.services
 
-import com.kuliah.vanilamovie.data.model.users.UsersDTO
-import com.kuliah.vanilamovie.data.model.users.userRequest
 import com.kuliah.vanilamovie.domain.model.ticket.Ticket
 import retrofit2.Call
 import retrofit2.Response

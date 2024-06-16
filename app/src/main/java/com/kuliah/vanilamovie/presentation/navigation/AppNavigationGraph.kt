@@ -92,7 +92,7 @@ fun AppNavigationGraph(
 			route = Route.Ticket.destination
 		) {
 //			val context = LocalContext.current
-			TicketScreen(ticketViewModel = ticketViewModel, navController = navHostController,)
+			TicketScreen(ticketViewModel = ticketViewModel, navController = navHostController, themeMode = darkTheme)
 		}
 
 		composable(

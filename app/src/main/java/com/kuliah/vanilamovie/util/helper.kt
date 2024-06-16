@@ -53,6 +53,8 @@ fun formatRupiah(amount: Int): String {
 	return numberFormat.format(amount)
 }
 
+
+
 // Simpan data tiket ke dalam shared preferences
 fun saveTicketsToSharedPreferences(context: Context, tickets: List<Ticket>) {
 	val sharedPreferences = context.getSharedPreferences("tickets", Context.MODE_PRIVATE)

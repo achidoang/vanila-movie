@@ -231,7 +231,7 @@ fun MovieNowDetails(
 			onClick = { navController.navigate("${Route.Seat.destination}/${movie.title}")},
 			colors = ButtonDefaults.buttonColors(
 				containerColor = Color(0xFF1A2C50),
-				contentColor = Color.White,
+				contentColor = Color.Yellow,
 			),
 			modifier = Modifier
 				.fillMaxWidth()
@@ -342,7 +342,7 @@ fun DataDetailMovie1(
 				.fillMaxWidth(),
 			colors = ButtonDefaults.buttonColors(
 				containerColor = Color(0xFF1A2C50),
-				contentColor = Color.White,
+				contentColor = Color.Yellow,
 			),
 			shape = RoundedCornerShape(6.dp),
 			onClick = { onPlayButtonClick(movie.title) },
