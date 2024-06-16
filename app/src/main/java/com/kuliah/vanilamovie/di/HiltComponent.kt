@@ -2,6 +2,7 @@ package com.kuliah.vanilamovie.di
 
 import com.kuliah.vanilamovie.data.remote.services.ItunesApi
 import com.kuliah.vanilamovie.data.remote.services.MovieApi
+import com.kuliah.vanilamovie.data.remote.services.TicketApi
 import dagger.Component
 import javax.inject.Singleton
 
@@ -10,4 +11,6 @@ import javax.inject.Singleton
 interface AppComponent {
 	fun getMovieApi(): MovieApi
 	fun getItunes(): ItunesApi
+
+
 }

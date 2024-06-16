@@ -91,8 +91,8 @@ fun AppNavigationGraph(
 		composable(
 			route = Route.Ticket.destination
 		) {
-			val context = LocalContext.current
-			TicketScreen(ticketViewModel = ticketViewModel, navController = navHostController, context = context)
+//			val context = LocalContext.current
+			TicketScreen(ticketViewModel = ticketViewModel, navController = navHostController,)
 		}
 
 		composable(
@@ -106,7 +106,6 @@ fun AppNavigationGraph(
 			SeatSelectorScreen(
 				navController = navHostController,
 				movieTitle = movieTitle,
-				context = context,
 				ticketViewModel = ticketViewModel // Operkan TicketViewModel ke SeatSelectorScreen
 			)
 		}

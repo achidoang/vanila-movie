@@ -70,7 +70,6 @@ fun SeatSelectorScreen(
 	navController: NavHostController,
 	movieTitle: String,
 	ticketViewModel: TicketViewModel,
-	context: Context
 ) {
 
 	// Define data structure to store ticket reservations
@@ -267,7 +266,7 @@ fun SeatSelectorScreen(
 									color = White
 								)
 								Text(
-									text = "Rp " + "${selectedSeat.size * 30000}",
+									text = formatRupiah(totalPrice),
 									style = MaterialTheme.typography.titleMedium,
 									color = White
 								)
@@ -352,17 +351,13 @@ fun SeatSelectorScreen(
 										onClick = {
 											showDialog = false
 											val ticket = Ticket(
-//												id = UUID.randomUUID().toString(),
 												movieTitle = movieTitle,
 												price = totalPrice,
 												time = selectedTime.value!!,
 												date = selectedDate.value.toString(),
-												seats = selectedSeat.toList()
+												seats = selectedSeat.toList(),
 											)
 											ticketViewModel.addTicket(ticket)
-
-											// Save all tickets to SharedPreferences
-											saveTicketsToSharedPreferences(context, ticketViewModel.ticketState.value)
 
 											navController.navigate(Route.Ticket.destination)
 										}

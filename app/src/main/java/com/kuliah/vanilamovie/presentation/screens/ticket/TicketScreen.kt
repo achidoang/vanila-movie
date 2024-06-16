@@ -41,17 +41,12 @@ import com.kuliah.vanilamovie.util.formatRupiah
 import com.kuliah.vanilamovie.util.loadTicketsFromSharedPreferences
 
 @Composable
-fun TicketScreen(ticketViewModel: TicketViewModel, navController: NavController, context: Context) {
-	val savedTickets = loadTicketsFromSharedPreferences(context)
+fun TicketScreen(ticketViewModel: TicketViewModel, navController: NavController) {
 	val ticketState by ticketViewModel.ticketState.collectAsState()
 
-	// Update the ticket state to include saved tickets without duplication
-	LaunchedEffect(savedTickets) {
-		savedTickets.forEach { savedTicket ->
-			if (!ticketState.any { it == savedTicket }) {
-				ticketViewModel.addTicket(savedTicket)
-			}
-		}
+	// Call loadTicketsFromApi when the TicketScreen composable is first launched
+	LaunchedEffect(true) {
+		ticketViewModel.loadTicketsFromApi()
 	}
 
 	// Navigate back to the home screen when back button is pressed
@@ -62,13 +57,6 @@ fun TicketScreen(ticketViewModel: TicketViewModel, navController: NavController,
 	}
 
 	Scaffold(
-//		topBar = {
-//			TopAppBar(
-//				title = { Text(text = "My Tickets", style = MaterialTheme.typography.titleSmall) },
-//				backgroundColor = Color(0xFF1A2C50),
-//				contentColor = Color.White
-//			)
-//		},
 		content = { it
 			if (ticketState.isEmpty()) {
 				Box(
@@ -94,11 +82,7 @@ fun TicketScreen(ticketViewModel: TicketViewModel, navController: NavController,
 			}
 		}
 	)
-
 }
-
-
-
 
 @Composable
 fun TicketItem(ticket: Ticket) {
@@ -107,15 +91,12 @@ fun TicketItem(ticket: Ticket) {
 			.fillMaxWidth()
 			.clip(shape = RoundedCornerShape(16.dp))
 			.clickable { /* Handle click event */ },
-//		elevation = 8.dp,
 		shape = RoundedCornerShape(16.dp),
-
 	) {
 		Column(
 			modifier = Modifier.padding(16.dp),
 			verticalArrangement = Arrangement.spacedBy(8.dp)
 		) {
-
 			Text(
 				text = ticket.movieTitle,
 				style = MaterialTheme.typography.titleMedium,
@@ -144,4 +125,3 @@ fun TicketItem(ticket: Ticket) {
 		}
 	}
 }
-
