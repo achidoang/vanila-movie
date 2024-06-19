@@ -48,10 +48,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.kuliah.vanilamovie.domain.model.ticket.Ticket
+import com.kuliah.vanilamovie.presentation.common.NoInternetComponent
 import com.kuliah.vanilamovie.presentation.navigation.Route
 import com.kuliah.vanilamovie.presentation.viewModel.ticket.TicketViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -62,6 +64,7 @@ fun TicketScreen(
 	themeMode: Boolean
 ) {
 	val ticketState by ticketViewModel.ticketState.collectAsState()
+	val errorState by ticketViewModel.errorState.collectAsState()
 
 	// Call loadTicketsFromApi when the TicketScreen composable is first launched
 	LaunchedEffect(true) {
@@ -78,7 +81,15 @@ fun TicketScreen(
 	Scaffold(
 		content = {
 			it
-			if (ticketState.isEmpty()) {
+			if (errorState != null) {
+				NoInternetComponent(
+					modifier = Modifier.fillMaxSize(),
+					error = "Whoops! Something has gone wrong\nUnable to connect to the server.",
+					refresh = {
+						ticketViewModel.loadTicketsFromApi()
+					}
+				)
+			} else if (ticketState.isEmpty()) {
 				Box(
 					modifier = Modifier.fillMaxSize(),
 					contentAlignment = Alignment.Center
@@ -108,7 +119,16 @@ fun TicketScreen(
 @Composable
 fun TicketItem(ticket: Ticket, themeMode: Boolean) {
 	val dateFormatter = DateTimeFormatter.ofPattern("EEEE, dd MMM yyyy", Locale("en", "EN"))
-	val formattedDate = LocalDate.parse(ticket.date).format(dateFormatter)
+	var formattedDate: String
+
+	try {
+		formattedDate = LocalDate.parse(ticket.date).format(dateFormatter)
+		println("Formatted date: $formattedDate")
+	} catch (e: DateTimeParseException) {
+		println("Error parsing date: ${e.message}")
+		// Handle the error case, maybe set a default value or rethrow the exception
+		formattedDate = "Invalid date"
+	}
 
 	Card(
 		modifier = Modifier
@@ -146,45 +166,55 @@ fun TicketItem(ticket: Ticket, themeMode: Boolean) {
 					color = MaterialTheme.colorScheme.onBackground
 				)
 			}
-
-			Row(verticalAlignment = Alignment.CenterVertically) {
-				Icon(
-					modifier = Modifier.size(20.dp),
-					imageVector = Icons.Default.MovieCreation,
-					contentDescription = "Ticket",
-					tint = MaterialTheme.colorScheme.onBackground
-				)
-				Spacer(modifier = Modifier.width(4.dp))
-				Text(
-					text = "Ticket (${ticket.seats.size})",
-					style = MaterialTheme.typography.labelMedium,
-					color = MaterialTheme.colorScheme.onBackground
-				)
-			}
-
-			Row(verticalAlignment = Alignment.CenterVertically) {
-				Text(
-					text = formattedDate,
-					style = MaterialTheme.typography.bodySmall,
-					color = MaterialTheme.colorScheme.onBackground
-				)
-				Text(
-					text = ", ${ticket.time}",
-					style = MaterialTheme.typography.bodySmall,
-					color = MaterialTheme.colorScheme.onBackground
-				)
-			}
 			Row(
 				modifier = Modifier.fillMaxWidth(),
 				verticalAlignment = Alignment.CenterVertically,
 				horizontalArrangement = Arrangement.SpaceBetween
 			) {
+				Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1.5f)) {
+					Icon(
+						modifier = Modifier.size(20.dp),
+						imageVector = Icons.Default.MovieCreation,
+						contentDescription = "Ticket",
+						tint = MaterialTheme.colorScheme.onBackground
+					)
+					Spacer(modifier = Modifier.width(4.dp))
+					Text(
+						text = "Ticket (${ticket.seats.size})",
+						style = MaterialTheme.typography.labelMedium,
+						color = MaterialTheme.colorScheme.onBackground
+					)
+				}
 
-				Text(
-					text = "Seats: ${ticket.seats.joinToString(", ")}",
-					style = MaterialTheme.typography.bodySmall,
-					color = MaterialTheme.colorScheme.onBackground
-				)
+				Box(modifier = Modifier.weight(1.5f)) {
+					Text(
+						text = "Seats: ${ticket.seats.joinToString(", ")}",
+						style = MaterialTheme.typography.bodySmall,
+						color = MaterialTheme.colorScheme.onBackground
+					)
+				}
+			}
+
+
+
+			Row(
+				modifier = Modifier.fillMaxWidth(),
+				verticalAlignment = Alignment.CenterVertically,
+				horizontalArrangement = Arrangement.SpaceBetween
+			) {
+				Row(verticalAlignment = Alignment.CenterVertically) {
+					Text(
+						text = formattedDate,
+						style = MaterialTheme.typography.bodySmall,
+						color = MaterialTheme.colorScheme.onBackground
+					)
+					Text(
+						text = ", ${ticket.time}",
+						style = MaterialTheme.typography.bodySmall,
+						color = MaterialTheme.colorScheme.onBackground
+					)
+				}
+
 				Text(
 					text = "Berhasil",
 					style = MaterialTheme.typography.bodySmall,
@@ -197,4 +227,5 @@ fun TicketItem(ticket: Ticket, themeMode: Boolean) {
 		}
 	}
 }
+
 

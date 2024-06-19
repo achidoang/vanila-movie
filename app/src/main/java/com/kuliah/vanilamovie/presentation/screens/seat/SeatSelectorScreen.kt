@@ -115,13 +115,14 @@ fun SeatSelectorScreen(
 				.padding(padding)
 				.fillMaxSize()
 		) {
-			Row(
+			Column(
 				modifier = Modifier.padding(
 					horizontal = 16.dp, vertical = 8.dp
 				),
-				verticalAlignment = Alignment.CenterVertically,
+				verticalArrangement = Arrangement.Center
 			) {
 				Text(text = "Select Seat", style = MaterialTheme.typography.titleSmall)
+				Text(text = "${movieTitle}", style = MaterialTheme.typography.titleSmall)
 			}
 
 			Box(
@@ -333,7 +334,7 @@ fun SeatSelectorScreen(
 							AlertDialog(
 								modifier = Modifier.fillMaxWidth(),
 								onDismissRequest = { showDialog = false },
-								title = { Text(text = "Konfirmasi") },
+								title = { Text(text = "CheckOut") },
 								text = {
 									val dateFormatter = DateTimeFormatter.ofPattern(
 										"EEEE, dd MMM yyyy",
@@ -350,21 +351,26 @@ fun SeatSelectorScreen(
 										Spacer(modifier = Modifier.height(12.dp))
 
 										Row(horizontalArrangement = Arrangement.SpaceBetween) {
-											Text(text = "${formattedDate ?: "Belum dipilih"}")
+											Text(text = "${formattedDate ?: "Belum dipilih"},")
 											Spacer(modifier = Modifier.width(8.dp))
 											Text("${selectedTime.value ?: "Belum dipilih"}")
 										}
 
-										Row(horizontalArrangement = Arrangement.SpaceBetween) {
-											Text(
-												text = if (selectedSeat.isEmpty()) {
-													"Seats: Anda Belum memilih Kursi"
-												} else {
-													"${selectedSeat.sorted().joinToString(", ")}"
-												}
-											)
+										Row(
+											modifier = Modifier.fillMaxWidth(),
+											horizontalArrangement = Arrangement.SpaceBetween
+										) {
+											Box(modifier = Modifier.weight(1f)) {
+												Text(
+													text = if (selectedSeat.isEmpty()) {
+														"Seats: Anda Belum memilih Kursi"
+													} else {
+														"Seats: ${selectedSeat.sorted().joinToString(", ")}"
+													},
+												)
+											}
 											Spacer(modifier = Modifier.width(8.dp))
-											Text("(${selectedSeat.size} Ticket)")
+											Text("(${selectedSeat.size} Ticket)", modifier = Modifier.wrapContentWidth(Alignment.End))
 										}
 										Row(horizontalArrangement = Arrangement.SpaceBetween) {
 											Text("Total Payment : ")
@@ -395,7 +401,7 @@ fun SeatSelectorScreen(
 										modifier = Modifier
 											.fillMaxWidth()
 											.height(36.dp),
-										shape = RoundedCornerShape(16.dp) // Mengatur bentuk button menjadi persegi panjang
+										shape = RoundedCornerShape(16.dp)
 									) {
 										Text("Buy Now")
 									}
@@ -407,11 +413,19 @@ fun SeatSelectorScreen(
 						if (showIncompleteSelectionAlert) {
 							AlertDialog(
 								onDismissRequest = { showIncompleteSelectionAlert = false },
-								title = { Text(text = "Perhatian") },
-								text = { Text("Anda harus memilih kursi, waktu, dan tanggal sebelum melanjutkan.") },
+								title = { Text(text = "Attention!") },
+								text = { Text("You must select a seat, time, and date berfore proceeding.") },
 								confirmButton = {
 									Button(
-										onClick = { showIncompleteSelectionAlert = false }
+										onClick = { showIncompleteSelectionAlert = false },
+										colors = ButtonDefaults.buttonColors(
+											containerColor = Color(0xFF1A2C50),
+											contentColor = Yellow,
+										),
+										modifier = Modifier
+											.fillMaxWidth()
+											.height(36.dp),
+										shape = RoundedCornerShape(16.dp)
 									) {
 										Text("OK")
 									}

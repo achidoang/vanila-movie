@@ -1,20 +1,13 @@
 package com.kuliah.vanilamovie.presentation.viewModel.ticket
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kuliah.vanilamovie.data.remote.services.TicketApi
-import com.kuliah.vanilamovie.di.RetrofitClient
+import com.kuliah.vanilamovie.di.TicketApiModule
 import com.kuliah.vanilamovie.domain.model.ticket.Ticket
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import javax.inject.Inject
 
 
 
@@ -22,8 +15,11 @@ class TicketViewModel : ViewModel() {
 	private val _ticketState = MutableStateFlow<List<Ticket>>(emptyList())
 	val ticketState: StateFlow<List<Ticket>> = _ticketState
 
+	private val _errorState = MutableStateFlow<String?>(null)
+	val errorState: StateFlow<String?> = _errorState
+
 	private val ticketApi: TicketApi by lazy {
-		RetrofitClient.instance.create(TicketApi::class.java)
+		TicketApiModule.instance.create(TicketApi::class.java)
 	}
 
 	// Function to add ticket locally and to API
@@ -38,12 +34,15 @@ class TicketViewModel : ViewModel() {
 				if (response.isSuccessful) {
 					// Update ticketState after adding ticket to API
 					loadTicketsFromApi()
+					_errorState.value = null
 				} else {
 					// Handle API error
 					// For example, log the error or show a message to the user
+					_errorState.value = "Unable to save ticket to the server."
 				}
 			} catch (e: Exception) {
 				// Handle exception (network error, etc.)
+				_errorState.value = "Unable to save ticket to the server."
 			}
 		}
 	}
@@ -56,12 +55,15 @@ class TicketViewModel : ViewModel() {
 				if (response.isSuccessful) {
 					val tickets = response.body() ?: emptyList()
 					_ticketState.value = tickets
+					_errorState.value = null
 				} else {
 					// Handle API error
 					// For example, log the error or show a message to the user
+					_errorState.value = "Unable to connect to the server."
 				}
 			} catch (e: Exception) {
 				// Handle exception (network error, etc.)
+				_errorState.value = "Unable to connect to the server."
 			}
 		}
 	}
