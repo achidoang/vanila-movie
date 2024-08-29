@@ -18,6 +18,24 @@
   <li><strong>Retrofit:</strong> Networking library for making HTTP requests to the TMDB and iTunes APIs.</li>
   <li><strong>Clean Architecture:</strong> Promotes modularity and separation of concerns for better code organization.</li>
 </ul>
+
+## Screenshots
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+
+  <img src="/Screenshoot/ss-1.jpg" alt="Screenshot 1" height="450px">
+  <img src="/Screenshoot/ss-2.jpg" alt="Screenshot 2" height="450px">
+  <img src="/Screenshoot/ss-3.jpg" alt="Screenshot 3" height="450px">
+  <img src="/Screenshoot/ss-4.jpg" alt="Screenshot 4" height="450px">
+  
+  <img src="/Screenshoot/ss-5.jpg" alt="Screenshot 5" height="450px">
+  <img src="/Screenshoot/ss-6.jpg" alt="Screenshot 6" height="450px">
+  <img src="/Screenshoot/ss-7.jpg" alt="Screenshot 7" height="450px">
+  <img src="/Screenshoot/ss-8.jpg" alt="Screenshot 8" height="450px">
+
+</div>
+
+
 <h2>Installation</h2>
 <ol>
   <li>Clone the repository to your local machine.</li>
