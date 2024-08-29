@@ -102,23 +102,12 @@ fun AppNavigationGraph(
 			)
 		) {
 			val movieTitle = it.arguments?.getString("movieTitle")!!
-			val context = LocalContext.current
 			SeatSelectorScreen(
 				navController = navHostController,
 				movieTitle = movieTitle,
 				ticketViewModel = ticketViewModel // Operkan TicketViewModel ke SeatSelectorScreen
 			)
 		}
-
-//		composable(
-//			route = "${Route.Seat.destination}/{movieTitle}",
-//			arguments = listOf(
-//				navArgument(name = "movieTitle") { type = NavType.StringType }
-//			)
-//		) {
-//			val movieTitle = it.arguments?.getString("movieTitle")!!
-//			SeatSelectorScreen(navController = navHostController, movieTitle = movieTitle)
-//		}
 
 		composable(route = Route.Search.destination) {
 			SearchScreen(
