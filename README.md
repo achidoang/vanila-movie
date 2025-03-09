@@ -2,6 +2,7 @@
 
 <h2>Features</h2>
 <ul>
+  <li><strong>Buy Ticket:</strong> Make a transaction to purchase cinema tickets.</li>
   <li><strong>TMDB Integration:</strong> Fetches movie and TV show data from The Movie Database (TMDB) API.</li>
   <li><strong>Comprehensive Listings:</strong> Displays Now Playing, Popular, and Top Rated movies, as well as On Air, Top Rated, and Popular TV shows.</li>
   <li><strong>Search Functionality:</strong> Allows users to search for movies and TV shows by title.</li>
